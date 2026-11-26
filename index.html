@@ -1,7 +1,7 @@
 <html lang="en" dir="ltr"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Linah Farms • Medjool Report • Oct 24, 2026</title>
+  <title>Linah Farms • Medjool External Suppliers Report 2026 • Nov 24, 2026</title>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
@@ -248,7 +248,7 @@
       }
     }
 
-    /* KPI layout: Total Harvest (wide) + 4 smaller cards */
+    /* KPI layout: Total External Supply (wide) + cards */
     .kpi-grid {
       display: grid;
       grid-template-columns: 1.8fr 1fr 1fr;
@@ -935,8 +935,8 @@
       <div class="logo-section">
         <img class="logo-img" id="logoImg" alt="Linah Farms" src="data:image/png;base64,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">
         <div class="title">
-          <h1>Medjool Report Season 2026</h1>
-          <p>All Quantity By (Ton) • Linah Farms</p>
+          <h1>Medjool External Suppliers Report 2026</h1>
+          <p>External Supply • All Quantity By (Ton) • Linah Farms</p>
         </div>
       </div>
       <div class="tabs-wrap">
@@ -958,9 +958,9 @@
     <!-- MAIN -->
     <div id="main" class="page active">
       <div class="kpi-grid">
-        <!-- Total Harvest (Medjool only) -->
+        <!-- Total External Supply -->
         <div class="card">
-          <div class="card-header" style="flex-wrap:wrap;gap:2px 7px;margin-bottom:6px"><div style="display:flex;align-items:center;gap:7px"><div class="icon icon-green">🌴</div> Total Harvest <span style="font-size:.75rem;font-weight:600;color:var(--text-muted);margin-left:4px">(Medjool only)</span></div><div style="width:100%;font-size:.78rem;font-weight:700;color:var(--text-muted);padding-left:37px;letter-spacing:.02em">All Quantity By (Ton)</div></div>
+          <div class="card-header" style="flex-wrap:wrap;gap:2px 7px;margin-bottom:6px"><div style="display:flex;align-items:center;gap:7px"><div class="icon icon-green">🌴</div> Total External Supply <span style="font-size:.75rem;font-weight:600;color:var(--text-muted);margin-left:4px">(Raw)</span></div><div style="width:100%;font-size:.78rem;font-weight:700;color:var(--text-muted);padding-left:37px;letter-spacing:.02em">All Quantity By (Ton)</div></div>
           <div class="kpi-stack">
             <div class="kpi-line">
               <div class="lbl"><span style="color:#10b981">●</span> Actual</div>
@@ -971,7 +971,7 @@
             </div>
             <div class="kpi-line">
               <div class="lbl"><span style="color:#c45c12">◎</span> Target</div>
-              <div class="val" id="kpiTarget" style="color:var(--orange);font-size:1.2rem">4,065</div>
+              <div class="val" id="kpiTarget" style="color:var(--orange);font-size:1.2rem">5,200</div>
             </div>
             <div class="kpi-line">
               <div class="lbl"><span style="color:#b91c1c">⏱</span> Remaining</div>
@@ -994,7 +994,7 @@
           <div class="center-val">
             <div class="kpi-value sm teal" id="kpiSorted">227.30</div>
             <div class="sub-label">Grades Total • Ton</div>
-            <div style="margin-top:6px"><span class="badge badge-green" id="kpiSortedPct">79.3%</span> <span style="font-size:.72rem;font-weight:600;color:var(--text-muted)">of harvest</span></div>
+            <div style="margin-top:6px"><span class="badge badge-green" id="kpiSortedPct">79.3%</span> <span style="font-size:.72rem;font-weight:600;color:var(--text-muted)">of supply</span></div>
           </div>
         </div>
 
@@ -1005,18 +1005,18 @@
           </div>
           <div class="center-val">
             <div class="kpi-value sm blue" id="kpiRaw">59.17</div>
-            <div class="sub-label">Medjool • Ton</div>
-            <div style="margin-top:6px"><span class="badge badge-green" id="kpiRawPct" style="background:var(--success-bg);color:#0369a1">20.7%</span> <span style="font-size:.72rem;font-weight:600;color:var(--text-muted)">of harvest</span></div>
+            <div class="sub-label">Raw − Sorted • Ton</div>
+            <div style="margin-top:6px"><span class="badge badge-green" id="kpiRawPct" style="background:var(--success-bg);color:#0369a1">20.7%</span> <span style="font-size:.72rem;font-weight:600;color:var(--text-muted)">of supply</span></div>
           </div>
         </div>
       </div>
 
-      <div class="sector-filters" id="sectorFilters"><span class="sf-label">Sector filter:</span><button type="button" class="sector-btn active" data-sector="ALL" onclick="setSectorFilter('ALL')">All</button><button type="button" class="sector-btn" data-sector="M27">M27</button><button type="button" class="sector-btn" data-sector="M21">M21</button><button type="button" class="sector-btn" data-sector="M30">M30</button><button type="button" class="sector-btn" data-sector="M33">M33</button><button type="button" class="sector-btn" data-sector="M06">M06</button><button type="button" class="sector-btn" data-sector="M32">M32</button><button type="button" class="sector-btn" data-sector="M28">M28</button><button type="button" class="sector-btn" data-sector="M01">M01</button><button type="button" class="sector-btn" data-sector="M25">M25</button><button type="button" class="sector-btn" data-sector="M29">M29</button><button type="button" class="sector-btn" data-sector="M03">M03</button><button type="button" class="sector-btn" data-sector="M26">M26</button><button type="button" class="sector-btn" data-sector="M31">M31</button><button type="button" class="sector-btn" data-sector="M24">M24</button><button type="button" class="sector-btn" data-sector="M22">M22</button></div>
+      <div class="sector-filters" id="sectorFilters"><span class="sf-label">Supplier filter:</span><button type="button" class="sector-btn active" data-sector="ALL" onclick="setSectorFilter('ALL')">All</button></div>
 
-      <!-- Harvest By Date full width -->
+      <!-- Daily Supplied Quantity full width -->
       <div class="charts-row full">
         <div class="chart-card">
-          <div class="chart-title">📅 Harvest By Date (Medjool)</div>
+          <div class="chart-title">📅 Daily Supplied Quantity</div>
           <div class="daily-chart-scroll">
             <div class="daily-chart-inner" id="dailyChartInner">
               <canvas id="dailyChart"></canvas>
@@ -1025,16 +1025,13 @@
         </div>
       </div>
 
-      <!-- Sector Actual vs Target (full width) -->
+      <!-- Sector Total External Supply by Suppliers (full width) -->
       <div class="charts-row full">
         <div class="chart-card">
-          <div class="chart-title">📊 Actual vs. Target by Sector (Medjool only)</div>
+          <div class="chart-title">📦 Total External Supply by Suppliers</div>
           <div class="legend">
             <div class="legend-item">
-              <div class="legend-dot" style="background:#10b981"></div> Actual
-            </div>
-            <div class="legend-item">
-              <div class="legend-dot" style="background:#fb923c"></div> Target
+              <div class="legend-dot" style="background:#10b981"></div> Supplied
             </div>
           </div>
           <div class="chart-container-tall"><canvas id="sectorChart" style="box-sizing: border-box; display: block; height: 340px; width: 1410px;" width="1410" height="340"></canvas></div>
@@ -1050,14 +1047,14 @@
 
       <!-- Grades page sector filter -->
       <div class="sector-filters" id="gradesSectorFilters" style="margin-bottom:12px">
-        <span class="sf-label">Sector filter:</span>
+        <span class="sf-label">Supplier filter:</span>
         <button type="button" class="sector-btn active" data-sector="ALL" onclick="setGradesSectorFilter('ALL')">All</button>
       </div>
 
-      <!-- Total Harvest + Total Sorted + Difference KPIs -->
+      <!-- Total External Supply + Total Sorted + Difference KPIs -->
       <div class="kpi-grid" id="gradesKpiRow" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:14px">
         <div class="card">
-          <div class="card-header"><div class="icon icon-green">🌴</div> Total Harvest</div>
+          <div class="card-header"><div class="icon icon-green">🌴</div> Total External Supply</div>
           <div class="center-val">
             <div class="kpi-value green" id="gradesKpiHarvest">0.00</div>
             <div class="sub-label">Quantities in Ton</div>
@@ -1067,14 +1064,14 @@
           <div class="card-header"><div class="icon icon-teal">✅</div> Total Sorted</div>
           <div class="center-val">
             <div class="kpi-value teal" id="gradesKpiSorted">0.00</div>
-            <div class="sub-label"><span id="gradesKpiSortedPct">0.0%</span> of Total Harvest</div>
+            <div class="sub-label"><span id="gradesKpiSortedPct">0.0%</span> of Total External Supply</div>
           </div>
         </div>
         <div class="card">
           <div class="card-header"><div class="icon icon-orange" style="background:#ffedd5;color:#c2410c">📉</div> Difference</div>
           <div class="center-val">
             <div class="kpi-value orange" id="gradesKpiDiff">0.00</div>
-            <div class="sub-label"><span id="gradesKpiDiffPct">0.0%</span> of Total Harvest</div>
+            <div class="sub-label"><span id="gradesKpiDiffPct">0.0%</span> of Total External Supply</div>
           </div>
         </div>
       </div>
@@ -1090,11 +1087,11 @@
             <div style="font-weight:800;font-size:1.35rem;color:var(--primary)"><span id="gradesTotalQty">227.30</span>
               <span style="font-size:.85rem;font-weight:700">Ton</span>
             </div>
-            <div><span class="badge badge-green" id="gradesTotalPctOfHarvest" style="font-size:.85rem;padding:4px 10px">79.3%</span> <span style="font-size:.78rem;font-weight:600;color:var(--text-muted)">of Total Harvest Actual</span></div>
+            <div><span class="badge badge-green" id="gradesTotalPctOfHarvest" style="font-size:.85rem;padding:4px 10px">79.3%</span> <span style="font-size:.78rem;font-weight:600;color:var(--text-muted)">of Total External Supply Actual</span></div>
           </div>
         </div>
       </div>
-      <div class="footer">Linah Farms • Medjool Season 2026</div>
+      <div class="footer">Linah Farms • Medjool External Suppliers Report 2026</div>
     </div>
 
     <div class="admin-only" style="margin-top:18px;">
@@ -1133,29 +1130,10 @@
       const STORAGE_KEY = 'linah_medjool_v4';
 
       // ===== BAKED_DATA_START =====
-const BAKED_DATA = {"lastUpdate":"Oct 24, 2026","gradesLastUpdate":"Oct 24, 2026","totalActual":3271.57,"totalTarget":4065.02,"station":3271.57,"inedible":0,"rawStock":525.61,"daily":{"labels":["28/8","29/8","30/8","31/8","1/9","2/9","3/9","4/9","5/9","6/9","7/9","8/9","9/9","10/9","11/9","12/9","13/9","14/9","15/9","16/9","17/9","18/9","19/9","20/9","21/9","22/9","23/9","24/9","25/9","26/9","27/9","28/9","29/9","30/9","1/10","2/10","3/10","4/10","5/10","6/10","7/10","8/10","9/10","10/10","11/10","12/10","13/10","14/10","15/10","16/10","17/10","18/10","19/10","20/10","21/10","22/10","23/10","24/10"],"values":[2.86,1.55,1.8,1.25,1.91,2.79,2.36,1.98,5.78,5.33,4.69,3.94,6.79,4.78,4.58,5.37,6.64,11.78,15.83,15.37,28.12,28.68,26.77,25.67,33.2,36.66,43.89,51.15,42.42,57.01,58.53,83.28,85.81,83.51,73.67,71.44,79.86,97.49,112.87,104.04,103.53,95.45,89.59,111.19,96.24,53.12,153.01,111.33,123.2,102.73,99.97,103.2,106.94,104.14,108.75,112.25,118.37,147.11]},"sectors":{"labels":["M01","M03","M06","M21","M22","M24","M25","M26","M27","M28","M29","M30","M31","M32","M33"],"actual":[241.41,565.3,171.79,97.53,92.46,32.57,129.63,299.38,294.84,316.32,268.77,436.25,46.14,125.22,153.95],"target":[400.5,720.12,121.27,147.05,124.29,50.59,381.99,258.48,397.87,403.89,253.85,393.15,44.51,249.16,118.28]},"inedibleBySector":{"labels":[],"values":[]},"otherItems":{"labels":[],"values":[]},"sectorDetails":{"M27":{"actual":63.93,"target":397.87,"inedible":0,"daily":{"labels":["1","2","3","4","5","6","7","9","19","20","21","22"],"values":[0.38,1.13,1.14,1.21,2.25,2.59,2.03,3.52,6.01,11.04,15.6,17.02]}},"M21":{"actual":9.3,"target":147.05,"inedible":0,"daily":{"labels":["7","8","9","10","11","12","13"],"values":[0.5,0.45,1.03,2.15,1.75,2.42,1]}},"M30":{"actual":52.12,"target":393.15,"inedible":0,"daily":{"labels":["30","31","1","2","3","4","5","6","7","18","19","20","21","22"],"values":[0.35,0.71,0.81,1.1,0.72,0.77,1.32,1.26,0.95,0.34,10.25,14.54,14.77,4.23]}},"M33":{"actual":5.84,"target":118.28,"inedible":0,"daily":{"labels":["28","9","10","11","20"],"values":[0.83,0.44,2.62,1.86,0.08]}},"M06":{"actual":32.67,"target":121.27,"inedible":0,"daily":{"labels":["28","29","11","12","13","14","15"],"values":[0.64,0.64,0.76,2.95,4.48,11.78,11.42]}},"M32":{"actual":17.19,"target":249.16,"inedible":0,"daily":{"labels":["2","3","5","6","21","22"],"values":[0.56,0.5,2.21,1.07,2.83,10.01]}},"M28":{"actual":3.49,"target":403.89,"inedible":0,"daily":{"labels":["8","9"],"values":[2.06,1.43]}},"M01":{"actual":2.19,"target":400.5,"inedible":0,"daily":{"labels":["6","7","8","9","11"],"values":[0.41,0.56,0.72,0.3,0.21]}},"M25":{"actual":1.7,"target":381.99,"inedible":0,"daily":{"labels":["28","29","30","16"],"values":[0.24,0.91,0.37,0.19]}},"M29":{"actual":37.93,"target":253.85,"inedible":0,"daily":{"labels":["30","31","1","16","17","18","19"],"values":[0.66,0.22,0.49,8.87,12.13,11.01,4.56]}},"M03":{"actual":12.17,"target":720.12,"inedible":0,"daily":{"labels":["28","30","31","1","17","18"],"values":[0.16,0.42,0.32,0.23,7.6,3.43]}},"M26":{"actual":29.22,"target":258.48,"inedible":0,"daily":{"labels":["28","17","18","19"],"values":[0.99,8.38,13.9,5.95]}},"M31":{"actual":5.16,"target":44.51,"inedible":0,"daily":{"labels":["7","8","22"],"values":[0.65,0.11,4.4]}},"M24":{"actual":1.67,"target":50.59,"inedible":0,"daily":{"labels":["8","9","22"],"values":[0.61,0.07,0.99]}},"M22":{"actual":11.89,"target":124.29,"inedible":0,"daily":{"labels":["13","15","16"],"values":[1.16,4.41,6.32]}}},"grades":[{"name":"Grade 4","qty":1073.46},{"name":"Grade 1","qty":745.34},{"name":"Grade 3","qty":339.54},{"name":"Grade 2","qty":313.79},{"name":"Rutab","qty":116.64},{"name":"Production Waste","qty":51.01},{"name":"Golden Crown","qty":39.27},{"name":"Dry","qty":33.72},{"name":"Hashaf","qty":17.7},{"name":"Compost Waste","qty":11.29},{"name":"Under Processing","qty":4.2}],"dateIndex":{"2026-08-28":{"medjool":2.86,"inedible":0,"bySector":{"M03":0.16,"M06":0.64,"M25":0.24,"M26":0.99,"M33":0.83},"inedibleBySector":{}},"2026-08-29":{"medjool":1.55,"inedible":0,"bySector":{"M06":0.64,"M25":0.91},"inedibleBySector":{}},"2026-08-30":{"medjool":1.8,"inedible":0,"bySector":{"M03":0.42,"M25":0.37,"M29":0.66,"M30":0.35},"inedibleBySector":{}},"2026-08-31":{"medjool":1.25,"inedible":0,"bySector":{"M03":0.32,"M29":0.22,"M30":0.71},"inedibleBySector":{}},"2026-09-01":{"medjool":1.91,"inedible":0,"bySector":{"M03":0.23,"M27":0.38,"M29":0.49,"M30":0.81},"inedibleBySector":{}},"2026-09-02":{"medjool":2.79,"inedible":0,"bySector":{"M27":1.13,"M30":1.1,"M32":0.56},"inedibleBySector":{}},"2026-09-03":{"medjool":2.36,"inedible":0,"bySector":{"M27":1.14,"M30":0.72,"M32":0.5},"inedibleBySector":{}},"2026-09-04":{"medjool":1.98,"inedible":0,"bySector":{"M27":1.21,"M30":0.77},"inedibleBySector":{}},"2026-09-05":{"medjool":5.78,"inedible":0,"bySector":{"M27":2.25,"M30":1.32,"M32":2.21},"inedibleBySector":{}},"2026-09-06":{"medjool":5.33,"inedible":0,"bySector":{"M01":0.41,"M27":2.59,"M30":1.26,"M32":1.07},"inedibleBySector":{}},"2026-09-07":{"medjool":4.69,"inedible":0,"bySector":{"M01":0.56,"M21":0.5,"M27":2.03,"M30":0.95,"M31":0.65},"inedibleBySector":{}},"2026-09-08":{"medjool":3.94,"inedible":0,"bySector":{"M01":0.72,"M21":0.45,"M24":0.61,"M28":2.06,"M31":0.11},"inedibleBySector":{}},"2026-09-09":{"medjool":6.79,"inedible":0,"bySector":{"M01":0.3,"M21":1.03,"M24":0.07,"M27":3.52,"M28":1.43,"M33":0.44},"inedibleBySector":{}},"2026-09-10":{"medjool":4.78,"inedible":0,"bySector":{"M21":2.15,"M33":2.62},"inedibleBySector":{}},"2026-09-11":{"medjool":4.58,"inedible":0,"bySector":{"M01":0.21,"M06":0.76,"M21":1.75,"M33":1.86},"inedibleBySector":{}},"2026-09-12":{"medjool":5.37,"inedible":0,"bySector":{"M06":2.95,"M21":2.42},"inedibleBySector":{}},"2026-09-13":{"medjool":6.64,"inedible":0,"bySector":{"M06":4.48,"M21":1.0,"M22":1.16},"inedibleBySector":{}},"2026-09-14":{"medjool":11.78,"inedible":0,"bySector":{"M06":11.78},"inedibleBySector":{}},"2026-09-15":{"medjool":15.83,"inedible":0,"bySector":{"M06":11.42,"M22":4.41},"inedibleBySector":{}},"2026-09-16":{"medjool":15.37,"inedible":0,"bySector":{"M22":6.32,"M25":0.19,"M29":8.87},"inedibleBySector":{}},"2026-09-17":{"medjool":28.12,"inedible":0,"bySector":{"M03":7.6,"M26":8.38,"M29":12.13},"inedibleBySector":{}},"2026-09-18":{"medjool":28.68,"inedible":0,"bySector":{"M03":3.43,"M26":13.9,"M29":11.01,"M30":0.34},"inedibleBySector":{}},"2026-09-19":{"medjool":26.77,"inedible":0,"bySector":{"M26":5.95,"M27":6.01,"M29":4.56,"M30":10.25},"inedibleBySector":{}},"2026-09-20":{"medjool":25.67,"inedible":0,"bySector":{"M27":11.04,"M30":14.54,"M33":0.08},"inedibleBySector":{}},"2026-09-21":{"medjool":33.2,"inedible":0,"bySector":{"M27":15.6,"M30":14.77,"M32":2.83},"inedibleBySector":{}},"2026-09-22":{"medjool":36.66,"inedible":0,"bySector":{"M24":0.99,"M27":17.02,"M30":4.23,"M31":4.4,"M32":10.01},"inedibleBySector":{}},"2026-09-23":{"medjool":43.89,"inedible":0,"bySector":{"M06":5.79,"M24":5.71,"M27":16.67,"M32":15.72},"inedibleBySector":{}},"2026-09-24":{"medjool":51.15,"inedible":0,"bySector":{"M06":39.87,"M24":1.14,"M27":1.65,"M28":8.49},"inedibleBySector":{}},"2026-09-25":{"medjool":42.42,"inedible":0,"bySector":{"M03":17.83,"M06":13.4,"M28":11.19},"inedibleBySector":{}},"2026-09-26":{"medjool":57.01,"inedible":0,"bySector":{"M03":36.71,"M06":6.26,"M28":14.03},"inedibleBySector":{}},"2026-09-27":{"medjool":58.53,"inedible":0,"bySector":{"M03":41.75,"M06":3.67,"M28":11.16,"M29":1.95},"inedibleBySector":{}},"2026-09-28":{"medjool":83.28,"inedible":0,"bySector":{"M03":22.53,"M26":30.07,"M28":0.12,"M33":30.56},"inedibleBySector":{}},"2026-09-29":{"medjool":85.81,"inedible":0,"bySector":{"M03":7.81,"M25":3.76,"M26":46.25,"M28":0.14,"M33":27.87},"inedibleBySector":{}},"2026-09-30":{"medjool":83.51,"inedible":0,"bySector":{"M03":12.51,"M25":3.16,"M26":51.27,"M29":14.73,"M33":1.85},"inedibleBySector":{}},"2026-10-01":{"medjool":73.67,"inedible":0,"bySector":{"M22":10.26,"M25":36.29,"M26":16.23,"M29":10.89},"inedibleBySector":{}},"2026-10-02":{"medjool":71.44,"inedible":0,"bySector":{"M22":8.1,"M25":46.62,"M26":5.27,"M29":11.45},"inedibleBySector":{}},"2026-10-03":{"medjool":79.86,"inedible":0,"bySector":{"M22":9.45,"M25":37.13,"M26":6.9,"M29":12.78,"M30":13.6},"inedibleBySector":{}},"2026-10-04":{"medjool":97.49,"inedible":0,"bySector":{"M29":15.67,"M30":81.82},"inedibleBySector":{}},"2026-10-05":{"medjool":112.87,"inedible":0,"bySector":{"M21":18.61,"M29":14.73,"M30":67.91,"M31":11.62},"inedibleBySector":{}},"2026-10-06":{"medjool":104.04,"inedible":0,"bySector":{"M21":24.81,"M27":44.83,"M30":28.79,"M31":5.61},"inedibleBySector":{}},"2026-10-07":{"medjool":103.53,"inedible":0,"bySector":{"M21":24.06,"M27":51.62,"M30":15.97,"M31":5.04,"M32":6.84},"inedibleBySector":{}},"2026-10-08":{"medjool":95.45,"inedible":0,"bySector":{"M21":15.35,"M27":63.43,"M31":16.67},"inedibleBySector":{}},"2026-10-09":{"medjool":89.59,"inedible":0,"bySector":{"M21":5.39,"M24":3.64,"M27":52.69,"M28":8.18,"M31":2.05,"M32":17.63},"inedibleBySector":{}},"2026-10-10":{"medjool":111.19,"inedible":0,"bySector":{"M24":10.83,"M28":61.29,"M32":39.08},"inedibleBySector":{}},"2026-10-11":{"medjool":96.24,"inedible":0,"bySector":{"M01":12.77,"M06":11.08,"M24":9.58,"M28":50.31,"M32":12.51},"inedibleBySector":{}},"2026-10-12":{"medjool":53.12,"inedible":0,"bySector":{"M01":4.84,"M06":10.28,"M28":35.2,"M32":2.8},"inedibleBySector":{}},"2026-10-13":{"medjool":153.01,"inedible":0,"bySector":{"M01":35.4,"M06":38.86,"M28":65.29,"M32":13.46},"inedibleBySector":{}},"2026-10-14":{"medjool":111.33,"inedible":0,"bySector":{"M01":70.3,"M06":9.91,"M26":11.04,"M28":20.07},"inedibleBySector":{}},"2026-10-15":{"medjool":123.2,"inedible":0,"bySector":{"M01":83.67,"M26":18.44,"M27":0.01,"M28":21.08},"inedibleBySector":{}},"2026-10-16":{"medjool":102.73,"inedible":0,"bySector":{"M01":32.23,"M03":24.8,"M26":19.28,"M28":6.29,"M29":9.41,"M33":10.73},"inedibleBySector":{}},"2026-10-17":{"medjool":99.97,"inedible":0,"bySector":{"M03":45.55,"M26":23.04,"M29":15.24,"M33":16.14},"inedibleBySector":{}},"2026-10-18":{"medjool":103.2,"inedible":0,"bySector":{"M03":43.12,"M26":22.45,"M29":20.01,"M33":17.61},"inedibleBySector":{}},"2026-10-19":{"medjool":106.94,"inedible":0,"bySector":{"M03":47.18,"M26":12.77,"M29":23.28,"M30":13.89,"M33":9.82},"inedibleBySector":{}},"2026-10-20":{"medjool":104.14,"inedible":0,"bySector":{"M03":44.32,"M26":7.16,"M29":12.7,"M30":23.96,"M33":16.0},"inedibleBySector":{}},"2026-10-21":{"medjool":108.75,"inedible":0,"bySector":{"M03":44.15,"M25":0.97,"M29":14.47,"M30":31.63,"M33":17.53},"inedibleBySector":{}},"2026-10-22":{"medjool":112.25,"inedible":0,"bySector":{"M03":47.49,"M29":33.2,"M30":31.55},"inedibleBySector":{}},"2026-10-23":{"medjool":118.37,"inedible":0,"bySector":{"M03":58.58,"M29":20.31,"M30":39.47},"inedibleBySector":{}},"2026-10-24":{"medjool":147.11,"inedible":0,"bySector":{"M03":58.79,"M22":52.76,"M30":35.55},"inedibleBySector":{}}},"finalGrades":{"bySector":{"M01":{"Grade 1":60.8136,"Grade 2":33.0455,"Grade 3":27.8795,"Grade 4":92.5436,"Golden Crown":2.1528,"Rutab":8.9725,"Dry":1.3714,"Under Processing":0.0,"Compost Waste":0.8276,"Production Waste":4.7484,"Hashaf":0.2452},"M03":{"Grade 1":71.1949,"Grade 2":38.6908,"Grade 3":45.8084,"Grade 4":194.8072,"Golden Crown":0.9604,"Rutab":22.0405,"Dry":3.8646,"Under Processing":0.2643,"Compost Waste":1.5865,"Production Waste":10.1065,"Hashaf":4.6025},"M06":{"Grade 1":58.5454,"Grade 2":18.7725,"Grade 3":16.9763,"Grade 4":49.241,"Golden Crown":11.9715,"Rutab":8.9319,"Dry":1.0601,"Under Processing":0.6946,"Compost Waste":0.9817,"Production Waste":2.7988,"Hashaf":1.0231},"M21":{"Grade 1":22.6812,"Grade 2":10.5403,"Grade 3":7.791,"Grade 4":49.1655,"Golden Crown":0.2443,"Rutab":3.6072,"Dry":0.2999,"Under Processing":0.6185,"Compost Waste":0.599,"Production Waste":0.874,"Hashaf":0.1282},"M22":{"Grade 1":9.7677,"Grade 2":5.166,"Grade 3":5.2605,"Grade 4":11.8034,"Golden Crown":0.7509,"Rutab":2.1033,"Dry":0.7375,"Under Processing":0.0,"Compost Waste":0.0,"Production Waste":0.392,"Hashaf":0.2035},"M24":{"Grade 1":9.2993,"Grade 2":4.4834,"Grade 3":4.326,"Grade 4":9.094,"Golden Crown":0.9888,"Rutab":1.3952,"Dry":0.4943,"Under Processing":0.6313,"Compost Waste":0.2636,"Production Waste":0.8534,"Hashaf":0.0},"M25":{"Grade 1":40.1424,"Grade 2":15.883,"Grade 3":18.7949,"Grade 4":43.1541,"Golden Crown":1.0698,"Rutab":6.1756,"Dry":0.8775,"Under Processing":0.0,"Compost Waste":0.8705,"Production Waste":1.4766,"Hashaf":0.7058},"M26":{"Grade 1":88.3518,"Grade 2":32.9364,"Grade 3":37.8962,"Grade 4":94.2839,"Golden Crown":3.3142,"Rutab":11.8888,"Dry":3.6604,"Under Processing":0.0,"Compost Waste":0.9589,"Production Waste":4.4044,"Hashaf":2.2482},"M27":{"Grade 1":93.5665,"Grade 2":30.3822,"Grade 3":36.9832,"Grade 4":103.6446,"Golden Crown":5.7159,"Rutab":10.1853,"Dry":7.4555,"Under Processing":0.2427,"Compost Waste":1.705,"Production Waste":3.6504,"Hashaf":1.3425},"M28":{"Grade 1":62.8126,"Grade 2":35.8503,"Grade 3":33.9864,"Grade 4":143.8984,"Golden Crown":2.6061,"Rutab":11.0453,"Dry":1.6962,"Under Processing":0.4048,"Compost Waste":1.7307,"Production Waste":6.3038,"Hashaf":2.5774},"M29":{"Grade 1":62.3713,"Grade 2":26.1298,"Grade 3":26.6421,"Grade 4":60.4544,"Golden Crown":3.4171,"Rutab":7.619,"Dry":4.1384,"Under Processing":0.0,"Compost Waste":0.7565,"Production Waste":4.7008,"Hashaf":0.8869},"M30":{"Grade 1":79.5028,"Grade 2":29.9129,"Grade 3":39.7508,"Grade 4":101.4718,"Golden Crown":1.8738,"Rutab":13.4123,"Dry":3.8733,"Under Processing":0.0,"Compost Waste":0.6056,"Production Waste":5.9825,"Hashaf":1.7302},"M31":{"Grade 1":5.3825,"Grade 2":4.0365,"Grade 3":5.4714,"Grade 4":16.1996,"Golden Crown":0.0,"Rutab":0.3332,"Dry":0.8567,"Under Processing":0.3605,"Compost Waste":0.3344,"Production Waste":0.2148,"Hashaf":0.0},"M32":{"Grade 1":21.96,"Grade 2":10.6551,"Grade 3":14.2803,"Grade 4":68.468,"Golden Crown":0.6642,"Rutab":4.6152,"Dry":1.843,"Under Processing":0.9786,"Compost Waste":0.0,"Production Waste":2.0466,"Hashaf":1.1469},"M33":{"Grade 1":58.9472,"Grade 2":17.3069,"Grade 3":17.6951,"Grade 4":35.23,"Golden Crown":3.5362,"Rutab":4.314,"Dry":1.4902,"Under Processing":0.0,"Compost Waste":0.0724,"Production Waste":2.4538,"Hashaf":0.8644}},"totals":{"Grade 1":745.3392,"Grade 2":313.7916,"Grade 3":339.5421,"Grade 4":1073.4595,"Golden Crown":39.266,"Rutab":116.6393,"Dry":33.719,"Under Processing":4.1953,"Compost Waste":11.2924,"Production Waste":51.0068,"Hashaf":17.7048},"order":["Grade 1","Grade 2","Grade 3","Grade 4","Golden Crown","Dry","Rutab","Under Processing","Production Waste","Compost Waste","Hashaf"],"sectors":["M01","M03","M06","M21","M22","M24","M25","M26","M27","M28","M29","M30","M31","M32","M33"]}};
+const BAKED_DATA = {"lastUpdate": "Nov 24, 2026", "gradesLastUpdate": "Nov 24, 2026", "totalActual": 102.5744, "totalTarget": 730.0, "station": 102.5744, "inedible": 0, "rawStock": 0, "daily": {"labels": ["23/11", "24/11"], "values": [35.3201, 67.2543]}, "sectors": {"labels": ["os20"], "actual": [102.5744], "target": [0]}, "inedibleBySector": {"labels": [], "values": []}, "otherItems": {"labels": [], "values": []}, "sectorDetails": {}, "grades": [{"name": "Grade 1", "qty": 39.5909}, {"name": "Grade 2", "qty": 11.4535}, {"name": "Grade 3", "qty": 15.469}, {"name": "Grade 4", "qty": 15.7067}, {"name": "Grade 4 (Dust Remains)", "qty": 4.0171}, {"name": "Golden Crown", "qty": 9.0507}, {"name": "Dry", "qty": 0.3954}, {"name": "Rutab", "qty": 5.4835}, {"name": "Under Processing", "qty": 1.3451}, {"name": "Waste", "qty": 0.3927}], "dateIndex": {"2026-11-23": {"medjool": 35.3201, "inedible": 0, "bySector": {"os20": 35.3201}, "inedibleBySector": {}}, "2026-11-24": {"medjool": 67.2543, "inedible": 0, "bySector": {"os20": 67.2543}, "inedibleBySector": {}}}, "finalGrades": {"bySector": {"os20": {"Grade 1": 39.5909, "Grade 2": 11.4535, "Grade 3": 15.469, "Grade 4": 15.7067, "Grade 4 (Dust Remains)": 4.0171, "Golden Crown": 9.0507, "Dry": 0.3954, "Rutab": 5.4835, "Under Processing": 1.3451, "Waste": 0.3927}}, "totals": {"Grade 1": 39.5909, "Grade 2": 11.4535, "Grade 3": 15.469, "Grade 4": 15.7067, "Grade 4 (Dust Remains)": 4.0171, "Golden Crown": 9.0507, "Dry": 0.3954, "Rutab": 5.4835, "Under Processing": 1.3451, "Waste": 0.3927}, "order": ["Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 4 (Dust Remains)", "Golden Crown", "Dry", "Rutab", "Under Processing", "Waste"], "sectors": ["os20"]}, "suppliers": {"os20": {"name": "شركة بالميرا", "city": "سيوة"}}};
 // ===== BAKED_DATA_END =====
 
-      const DEFAULT_DATA = {
-        lastUpdate: "Sep 12, 2026",
-        gradesLastUpdate: "Sep 12, 2026",
-        totalActual: 57.75, totalTarget: 4065.02, station: 57.75, inedible: 0, rawStock: 0,
-        daily: {
-          labels: ["28/8", "29/8", "30/8", "31/8", "1/9", "2/9", "3/9", "4/9", "5/9", "6/9", "7/9", "8/9", "9/9", "10/9", "11/9", "12/9"],
-          values: [2.86, 1.55, 1.80, 1.25, 1.91, 2.79, 2.36, 1.98, 5.78, 5.33, 4.69, 3.94, 6.79, 4.78, 4.58, 5.37]
-        },
-        sectors: {
-          labels: ["M27", "M21", "M30", "M33", "M06", "M32", "M28", "M01", "M25", "M29", "M03", "M26", "M31", "M24", "M22"],
-          actual: [14.25, 8.30, 7.98, 5.76, 4.99, 4.34, 3.49, 2.19, 1.51, 1.37, 1.13, 0.99, 0.76, 0.68, 0],
-          target: [397.87, 147.05, 393.15, 118.28, 121.27, 249.16, 403.89, 400.50, 381.99, 253.85, 720.12, 258.48, 44.51, 50.59, 124.29]
-        },
-        inedibleBySector: { labels: [], values: [] },
-        otherItems: { labels: [], values: [] },
-        grades: [
-          { name: "Grade 1", qty: 6.23 }, { name: "Grade 2", qty: 2.58 }, { name: "Grade 3", qty: 1.28 },
-          { name: "Grade 4", qty: 1.64 }, { name: "Wrapped", qty: 0.88 }
-        ]
-      };
+      const DEFAULT_DATA = {"lastUpdate": "Nov 24, 2026", "gradesLastUpdate": "Nov 24, 2026", "totalActual": 102.5744, "totalTarget": 730.0, "station": 102.5744, "inedible": 0, "rawStock": 0, "daily": {"labels": ["23/11", "24/11"], "values": [35.3201, 67.2543]}, "sectors": {"labels": ["os20"], "actual": [102.5744], "target": [0]}, "inedibleBySector": {"labels": [], "values": []}, "otherItems": {"labels": [], "values": []}, "sectorDetails": {}, "grades": [{"name": "Grade 1", "qty": 39.5909}, {"name": "Grade 2", "qty": 11.4535}, {"name": "Grade 3", "qty": 15.469}, {"name": "Grade 4", "qty": 15.7067}, {"name": "Grade 4 (Dust Remains)", "qty": 4.0171}, {"name": "Golden Crown", "qty": 9.0507}, {"name": "Dry", "qty": 0.3954}, {"name": "Rutab", "qty": 5.4835}, {"name": "Under Processing", "qty": 1.3451}, {"name": "Waste", "qty": 0.3927}], "dateIndex": {"2026-11-23": {"medjool": 35.3201, "inedible": 0, "bySector": {"os20": 35.3201}, "inedibleBySector": {}}, "2026-11-24": {"medjool": 67.2543, "inedible": 0, "bySector": {"os20": 67.2543}, "inedibleBySector": {}}}, "finalGrades": {"bySector": {"os20": {"Grade 1": 39.5909, "Grade 2": 11.4535, "Grade 3": 15.469, "Grade 4": 15.7067, "Grade 4 (Dust Remains)": 4.0171, "Golden Crown": 9.0507, "Dry": 0.3954, "Rutab": 5.4835, "Under Processing": 1.3451, "Waste": 0.3927}}, "totals": {"Grade 1": 39.5909, "Grade 2": 11.4535, "Grade 3": 15.469, "Grade 4": 15.7067, "Grade 4 (Dust Remains)": 4.0171, "Golden Crown": 9.0507, "Dry": 0.3954, "Rutab": 5.4835, "Under Processing": 1.3451, "Waste": 0.3927}, "order": ["Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 4 (Dust Remains)", "Golden Crown", "Dry", "Rutab", "Under Processing", "Waste"], "sectors": ["os20"]}, "suppliers": {"os20": {"name": "شركة بالميرا", "city": "سيوة"}}};
 
       // Mode: public view vs admin (?admin in URL)
       const IS_ADMIN = (function () {
@@ -1333,6 +1311,7 @@ const BAKED_DATA = {"lastUpdate":"Oct 24, 2026","gradesLastUpdate":"Oct 24, 2026
         if (/grade\s*1|^1$/.test(n)) return '🥇';
         if (/grade\s*2|^2$/.test(n)) return '🥈';
         if (/grade\s*3|^3$/.test(n)) return '🥉';
+        if (/dust|بقايا|اتربه/.test(n)) return '🧹';
         if (/grade\s*4|^4$/.test(n)) return '4️⃣';
         if (/golden\s*crown|جولدن|wrapped|مطوق|matouq/.test(n)) return '👑';
         if (/production\s*waste|هالك\s*تصنيع/.test(n)) return '🏭';
@@ -1352,7 +1331,7 @@ const BAKED_DATA = {"lastUpdate":"Oct 24, 2026","gradesLastUpdate":"Oct 24, 2026
         // keep ISO for filename convenience
         window._manualDateIso = iso;
         const title = document.querySelector('title');
-        if (title) title.textContent = 'Linah Farms • Medjool Report • ' + disp;
+        if (title) title.textContent = 'Linah Farms • Medjool External Suppliers Report 2026 • ' + disp;
       }
 
       function togglePresentationMode() {
@@ -1546,10 +1525,15 @@ const BAKED_DATA = {"lastUpdate":"Oct 24, 2026","gradesLastUpdate":"Oct 24, 2026
         // byDateSector was not built; build quickly from stored maps if we add during loop
         // For now: if we have byDateSector global from loop...
         if (typeof byDateSector !== 'undefined') {
+          // Only days with actual harvest for each sector
           allSectors.forEach(s => {
-            const dates = Object.keys(byDateSector[s] || {}).sort();
+            const dates = Object.keys(byDateSector[s] || {}).sort().filter(d => (byDateSector[s][d] || 0) > 0);
             sectorDetails[s].daily = {
-              labels: dates.map(d => { const day = d.slice(8, 10); return day.startsWith('0') ? day.slice(1) : day; }),
+              labels: dates.map(d => {
+                const day = String(+d.slice(8, 10));
+                const mon = String(+d.slice(5, 7));
+                return day + '/' + mon;
+              }),
               values: dates.map(d => +(byDateSector[s][d] || 0).toFixed(2))
             };
           });
@@ -1559,7 +1543,7 @@ const BAKED_DATA = {"lastUpdate":"Oct 24, 2026","gradesLastUpdate":"Oct 24, 2026
           lastUpdate: formatDisplayDate(maxActualDate),
           gradesLastUpdate: formatDisplayDate(maxGradeDate || maxActualDate),
           totalActual: +totalMedjool.toFixed(2),
-          totalTarget: +totalTarget.toFixed(2) || 4065,
+          totalTarget: +totalTarget.toFixed(2) || 730,
           station: +station.toFixed(2),
           inedible: +totalInedible.toFixed(2),
           rawStock: Math.max(0, +(totalMedjool - (function(){ const t = (typeof finalGrades !== 'undefined' && finalGrades && finalGrades.totals) ? Object.values(finalGrades.totals).reduce((s,v)=>s+(Number(v)||0),0) : grades.reduce((s,g)=>s+(g.qty||0),0); return t; })()).toFixed(2)),
@@ -1604,7 +1588,7 @@ const BAKED_DATA = {"lastUpdate":"Oct 24, 2026","gradesLastUpdate":"Oct 24, 2026
         const base = FULL_DATA || DATA;
         const labels = (base.sectors && base.sectors.labels) ? base.sectors.labels.slice() : [];
         // keep All button, rebuild rest
-        wrap.innerHTML = '<span class="sf-label">Sector filter:</span>' +
+        wrap.innerHTML = '<span class="sf-label">Supplier filter:</span>' +
           '<button type="button" class="sector-btn' + (activeSector === 'ALL' ? ' active' : '') + '" data-sector="ALL" onclick="setSectorFilter(\'ALL\')">All</button>';
         labels.forEach(s => {
           const btn = document.createElement('button');
@@ -1638,7 +1622,7 @@ const BAKED_DATA = {"lastUpdate":"Oct 24, 2026","gradesLastUpdate":"Oct 24, 2026
         const base = FULL_DATA || DATA;
         const fg = base.finalGrades || {};
         const labels = (fg.sectors && fg.sectors.length) ? fg.sectors.slice() : ((base.sectors && base.sectors.labels) || []);
-        wrap.innerHTML = '<span class="sf-label">Sector filter:</span>' +
+        wrap.innerHTML = '<span class="sf-label">Supplier filter:</span>' +
           '<button type="button" class="sector-btn' + (activeGradesSector === 'ALL' ? ' active' : '') + '" data-sector="ALL" onclick="setGradesSectorFilter(\'ALL\')">All</button>';
         labels.forEach(s => {
           const btn = document.createElement('button');
@@ -1657,8 +1641,8 @@ const BAKED_DATA = {"lastUpdate":"Oct 24, 2026","gradesLastUpdate":"Oct 24, 2026
         // Core grades first; waste types always last (Compost / Production / Hashaf)
         const preferred = [
           'Grade 1', 'Grade 2', 'Grade 3', 'Grade 4',
-          'Golden Crown', 'Dry', 'Rutab', 'Under Processing',
-          'Production Waste', 'Compost Waste', 'Hashaf'
+          'Grade 4 (Dust Remains)', 'Golden Crown', 'Dry', 'Rutab',
+          'Under Processing', 'Waste', 'Production Waste', 'Compost Waste', 'Hashaf'
         ];
         let qtyMap = {};
         if (activeGradesSector && activeGradesSector !== 'ALL') {
@@ -1698,7 +1682,8 @@ const BAKED_DATA = {"lastUpdate":"Oct 24, 2026","gradesLastUpdate":"Oct 24, 2026
             if (!waste.some(w => w.name === g.name)) waste.push(g);
           }
         });
-        const finalList = main.filter(g => !/waste|hashaf|حشف|هالك|compost/i.test(g.name)).concat(waste);
+        const finalList = main.filter(g => !/waste|hashaf|حشف|هالك|compost/i.test(g.name)).concat(waste)
+          .filter(g => (Number(g.qty) || 0) > 0);
         const sortedQty = +finalList.reduce((s, g) => s + (Number(g.qty) || 0), 0).toFixed(2);
         let harvest = Number(base.totalActual) || 0;
         if (activeGradesSector && activeGradesSector !== 'ALL') {
@@ -1863,9 +1848,29 @@ function setDateFilter(isoOrNull) {
           const actual = idx >= 0 ? (base.sectors.actual[idx] || 0) : 0;
           const target = idx >= 0 ? (base.sectors.target[idx] || 0) : 0;
           const inedible = (base.sectorDetails && base.sectorDetails[s]) ? (base.sectorDetails[s].inedible || 0) : 0;
-          const daily = (base.sectorDetails && base.sectorDetails[s] && base.sectorDetails[s].daily)
-            ? JSON.parse(JSON.stringify(base.sectorDetails[s].daily))
-            : { labels: [], values: [] };
+          // Only days when THIS sector actually harvested (> 0) — full list from dateIndex
+          const allKeys = Object.keys(base.dateIndex || {}).sort();
+          const labels = [];
+          const values = [];
+          allKeys.forEach(iso => {
+            const amt = (base.dateIndex[iso] && base.dateIndex[iso].bySector && base.dateIndex[iso].bySector[s]) || 0;
+            const n = +Number(amt).toFixed(2);
+            if (n <= 0) return;
+            const day = String(+iso.slice(8, 10));
+            const mon = String(+iso.slice(5, 7));
+            labels.push(day + '/' + mon);
+            values.push(n);
+          });
+          // Fallback: sectorDetails daily, drop zeros
+          let daily = { labels, values };
+          if (!labels.length && base.sectorDetails && base.sectorDetails[s] && base.sectorDetails[s].daily) {
+            const sd = base.sectorDetails[s].daily;
+            daily = { labels: [], values: [] };
+            (sd.labels || []).forEach((lab, i) => {
+              const n = +Number((sd.values || [])[i] || 0).toFixed(2);
+              if (n > 0) { daily.labels.push(lab); daily.values.push(n); }
+            });
+          }
           view.totalActual = +actual.toFixed(2);
           view.totalTarget = +target.toFixed(2);
           view.inedible = +inedible.toFixed(2);
@@ -1912,11 +1917,11 @@ function setDateFilter(isoOrNull) {
         const rem = DATA.totalTarget - DATA.totalActual;
         const remPct = DATA.totalTarget > 0 ? -(rem / DATA.totalTarget * 100) : 0;
 
-        // Update Total Harvest subtitle
+        // Update Total External Supply subtitle
         const thHeader = document.querySelector('.kpi-grid .card .card-header');
         if (thHeader) {
-          const sectorLbl = (activeSector && activeSector !== 'ALL') ? activeSector : 'Medjool only';
-          thHeader.innerHTML = '<div style="display:flex;align-items:center;gap:7px"><div class="icon icon-green">🌴</div> Total Harvest <span style="font-size:.75rem;font-weight:600;color:var(--text-muted);margin-left:4px">(' + sectorLbl + ')</span></div>'
+          const sectorLbl = (activeSector && activeSector !== 'ALL') ? activeSector : 'Raw';
+          thHeader.innerHTML = '<div style="display:flex;align-items:center;gap:7px"><div class="icon icon-green">🌴</div> Total External Supply <span style="font-size:.75rem;font-weight:600;color:var(--text-muted);margin-left:4px">(' + sectorLbl + ')</span></div>'
             + '<div style="width:100%;font-size:.78rem;font-weight:700;color:var(--text-muted);padding-left:37px;letter-spacing:.02em">All Quantity By (Ton)</div>';
         }
 
@@ -1983,6 +1988,7 @@ function setDateFilter(isoOrNull) {
             if (/grade\s*1|^1$/.test(n)) return 1;
             if (/grade\s*2|^2$/.test(n)) return 2;
             if (/grade\s*3|^3$/.test(n)) return 3;
+            if (/dust|بقايا|اتربه/.test(n)) return 4.5;
             if (/grade\s*4|^4$/.test(n)) return 4;
             if (/golden\s*crown|wrapped|مطوق|matouq|جولدن/.test(n)) return 5;
             if (/dry|جاف/.test(n)) return 6;
@@ -2125,13 +2131,12 @@ function setDateFilter(isoOrNull) {
           }
         });
 
-        // Sector Actual vs Target
+        // Sector Total External Supply by Suppliers
         sectorChart = new Chart(document.getElementById('sectorChart'), {
           type: 'bar',
           data: {
             labels: DATA.sectors.labels, datasets: [
-              { label: 'Actual', data: DATA.sectors.actual, backgroundColor: c.actual, borderRadius: 5, barPercentage: .75, categoryPercentage: .7 },
-              { label: 'Target', data: DATA.sectors.target, backgroundColor: c.target, borderRadius: 5, barPercentage: .75, categoryPercentage: .7 }
+              { label: 'Supplied', data: DATA.sectors.actual, backgroundColor: c.actual, borderRadius: 5, barPercentage: .65, categoryPercentage: .7 }
             ]
           },
           options: {
@@ -2144,28 +2149,23 @@ function setDateFilter(isoOrNull) {
                 font: { weight: '800', size: 11 },
                 formatter: (v, ctx) => {
                   if (!(v > 0)) return '';
-                  const qty = v < 10 ? v.toFixed(2) : v.toFixed(1);
-                  // Actual dataset: % of this sector's own Target (not total harvest)
-                  if (ctx.datasetIndex === 0) {
-                    const tgt = (DATA.sectors.target || [])[ctx.dataIndex] || 0;
-                    const pct = tgt > 0 ? ((v / tgt) * 100) : 0;
-                    return qty + '\n' + pct.toFixed(1) + '%';
-                  }
-                  return qty;
+                  return v < 10 ? v.toFixed(2) : v.toFixed(1);
                 }
               },
               tooltip: {
                 backgroundColor: '#1a5c3a',
                 callbacks: {
                   afterBody: (items) => {
-                    const it = items.find(i => i.datasetIndex === 0) || items[0];
-                    if (!it || it.datasetIndex !== 0) return [];
-                    const tgt = (DATA.sectors.target || [])[it.dataIndex] || 0;
-                    const ach = tgt > 0 ? ((it.raw / tgt) * 100) : 0;
+                    const it = items[0];
+                    if (!it) return [];
                     const base = FULL_DATA || DATA;
                     const tot = Number(base.totalActual) || 0;
                     const share = tot > 0 ? ((it.raw / tot) * 100) : 0;
-                    return ['Achievement vs sector target: ' + ach.toFixed(1) + '%', 'Share of total harvest: ' + share.toFixed(1) + '%'];
+                    const code = (DATA.sectors.labels || [])[it.dataIndex] || '';
+                    const info = (base.suppliers && base.suppliers[code]) || {};
+                    const lines = ['Share of total supply: ' + share.toFixed(1) + '%'];
+                    if (info.name) lines.push(info.name + (info.city ? ' — ' + info.city : ''));
+                    return lines;
                   }
                 }
               }
@@ -2428,7 +2428,7 @@ function setDateFilter(isoOrNull) {
         const baked = markerStart + '\nconst BAKED_DATA = ' + JSON.stringify(payload) + ';\n' + markerEnd;
         let newHtml = htmlDoc.substring(0, startIdx) + baked + htmlDoc.substring(endIdx + markerEnd.length);
         const disp = payload.lastUpdate || 'update';
-        newHtml = newHtml.replace(/<title>.*?<\/title>/, '<title>Linah Farms • Medjool Report • ' + disp + '</title>');
+        newHtml = newHtml.replace(/<title>.*?<\/title>/, '<title>Linah Farms • Medjool External Suppliers Report 2026 • ' + disp + '</title>');
         downloadBlob('index.html', newHtml, 'text/html;charset=utf-8');
         const status = document.getElementById('statusBar');
         if (status) {
