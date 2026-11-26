@@ -1180,7 +1180,7 @@ const BAKED_DATA = {"lastUpdate": "Nov 24, 2026", "gradesLastUpdate": "Nov 24, 2
         const reader = new FileReader();
         reader.onload = evt => {
           try {
-            const wb = XLSX.read(new Uint8Array(evt.target.result), { type: 'array', cellDates: false, raw: false });
+            const wb = XLSX.read(new Uint8Array(evt.target.result), { type: 'array', cellDates: true, raw: true });
             parseWorkbook(wb); persistData();
             // Auto date = latest date from شيت الفعلي (ISO from maxActualDate)
             try {
@@ -1222,9 +1222,21 @@ const BAKED_DATA = {"lastUpdate": "Nov 24, 2026", "gradesLastUpdate": "Nov 24, 2
             s.norm.includes(n) || s.norm.toLowerCase().includes(nn) ||
             s.raw.includes(n)
           );
-          if (f) return XLSX.utils.sheet_to_json(wb.Sheets[f.raw], { defval: null, raw: false });
+          // raw:true keeps real numbers & excel serial dates (avoids "35,320.1" / "11-23-26" formatting bugs)
+          if (f) return XLSX.utils.sheet_to_json(wb.Sheets[f.raw], { defval: null, raw: true });
         }
         return [];
+      }
+
+      /** Parse qty from excel cell: handles numbers, "35,320.1", nbsp, etc. */
+      function parseQty(v) {
+        if (v === null || v === undefined || v === '') return 0;
+        if (typeof v === 'number' && isFinite(v)) return v;
+        let s = String(v).trim();
+        // strip currency/spacing artifacts from excel formats
+        s = s.replace(/[\s\u00A0_]/g, '').replace(/,/g, '');
+        const n = parseFloat(s);
+        return isFinite(n) ? n : 0;
       }
 
       function toDateStr(dv) {
@@ -1250,9 +1262,25 @@ const BAKED_DATA = {"lastUpdate": "Nov 24, 2026", "gradesLastUpdate": "Nov 24, 2
         if (typeof dv === 'string') {
           const s = dv.trim();
           if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0, 10);
-          // D/M/YYYY or M/D/YYYY — prefer D/M (Arabic Excel)
-          const m1 = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
-          if (m1) return m1[3] + '-' + m1[2].padStart(2, '0') + '-' + m1[1].padStart(2, '0');
+          // D/M/YYYY or M/D/YYYY
+          let m1 = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+          if (m1) {
+            // Prefer D/M/YYYY (common in AR locale); if first>12 treat as D/M
+            let d = +m1[1], mo = +m1[2], y = +m1[3];
+            if (d <= 12 && mo > 12) { const t = d; d = mo; mo = t; }
+            // if both <= 12, assume M/D when number format was mm-dd-yy style ambiguous — keep D/M default
+            return y + '-' + String(mo).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+          }
+          // mm-dd-yy or dd-mm-yy (2-digit year)
+          m1 = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2})$/);
+          if (m1) {
+            let a = +m1[1], b = +m1[2], y = +m1[3];
+            y = y < 50 ? 2000 + y : 1900 + y;
+            // Excel number format on this file is mm-dd-yy
+            let mo = a, d = b;
+            if (a > 12 && b <= 12) { d = a; mo = b; }
+            return y + '-' + String(mo).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+          }
         }
         return '';
       }
@@ -1584,8 +1612,10 @@ const BAKED_DATA = {"lastUpdate": "Nov 24, 2026", "gradesLastUpdate": "Nov 24, 2
 
       /** Parse outsource Excel: Raw os + Grades os (qty in kg → tons) */
       function parseOutsourceWorkbook(wb) {
+        // Excel outsource files store qty in KG → convert to tons.
+        // parseQty avoids "35,320.1" becoming 35.
         const kgToTon = (v) => {
-          const n = parseFloat(v);
+          const n = parseQty(v);
           if (!isFinite(n) || !n) return 0;
           return +(n / 1000).toFixed(4);
         };
@@ -1614,35 +1644,46 @@ const BAKED_DATA = {"lastUpdate": "Nov 24, 2026", "gradesLastUpdate": "Nov 24, 2
         let maxActualDate = null;
         let totalActual = 0;
 
+        // Pass 1: collect rows with native qty (detect kg vs ton)
+        const rawParsed = [];
+        let rawSumNative = 0;
         rawRows.forEach(r => {
           const keys = Object.keys(r);
-          const dateKey = keys.find(k => /تاريخ|date/i.test(k)) || keys[0];
-          const codeKey = keys.find(k => /كود\s*المورد|كود|code|supplier\s*code/i.test(k)) || keys[1];
-          const qtyKey = keys.find(k => /كمية|qty|quantity/i.test(k)) || keys[2];
-          const nameKey = keys.find(k => /اسم\s*المورد|اسم|name/i.test(k));
-          const cityKey = keys.find(k => /مدينة|city/i.test(k));
-
+          const dateKey = keys.find(k => /تاريخ|date/i.test(String(k))) || keys[0];
+          const codeKey = keys.find(k => /كود\s*المورد|كود المورد|كود|code|supplier\s*code/i.test(String(k))) || keys[1];
+          const qtyKey = keys.find(k => /كمية|qty|quantity/i.test(String(k))) || keys[2];
+          const nameKey = keys.find(k => /اسم\s*المورد|اسم المورد|اسم|name/i.test(String(k)));
+          const cityKey = keys.find(k => /مدينة|city/i.test(String(k)));
           const code = String(r[codeKey] || '').trim().toLowerCase();
-          const qty = kgToTon(r[qtyKey]);
-          if (!code || !qty) return;
-          const dStr = toDateStr(r[dateKey]);
-          if (dStr && (!maxActualDate || dStr > maxActualDate)) maxActualDate = dStr;
+          const native = parseQty(r[qtyKey]);
+          if (!code || !native) return;
+          rawSumNative += native;
+          rawParsed.push({ code, native, dStr: toDateStr(r[dateKey]), nameKey, cityKey, r });
+        });
+        // If values look like KG (typical daily loads >> 500), convert to tons; else already tons
+        const rawIsKg = rawSumNative >= 500;
+        const toTon = (n) => rawIsKg ? +(n / 1000).toFixed(4) : +n.toFixed(4);
 
+        rawParsed.forEach(item => {
+          const qty = toTon(item.native);
+          const code = item.code;
+          if (item.dStr && (!maxActualDate || item.dStr > maxActualDate)) maxActualDate = item.dStr;
           totalActual += qty;
           bySupplier[code] = (bySupplier[code] || 0) + qty;
-          if (dStr) {
-            byDate[dStr] = (byDate[dStr] || 0) + qty;
+          if (item.dStr) {
+            byDate[item.dStr] = (byDate[item.dStr] || 0) + qty;
             if (!byDateSector[code]) byDateSector[code] = {};
-            byDateSector[code][dStr] = (byDateSector[code][dStr] || 0) + qty;
+            byDateSector[code][item.dStr] = (byDateSector[code][item.dStr] || 0) + qty;
           }
+          const r = item.r;
           if (!suppliers[code]) {
             suppliers[code] = {
-              name: nameKey ? String(r[nameKey] || '').trim() : code,
-              city: cityKey ? String(r[cityKey] || '').trim() : ''
+              name: item.nameKey ? String(r[item.nameKey] || '').trim() : code,
+              city: item.cityKey ? String(r[item.cityKey] || '').trim() : ''
             };
           } else {
-            if (nameKey && r[nameKey]) suppliers[code].name = String(r[nameKey]).trim();
-            if (cityKey && r[cityKey]) suppliers[code].city = String(r[cityKey]).trim();
+            if (item.nameKey && r[item.nameKey]) suppliers[code].name = String(r[item.nameKey]).trim();
+            if (item.cityKey && r[item.cityKey]) suppliers[code].city = String(r[item.cityKey]).trim();
           }
         });
 
@@ -1652,16 +1693,33 @@ const BAKED_DATA = {"lastUpdate": "Nov 24, 2026", "gradesLastUpdate": "Nov 24, 2
         const gradesBySupplier = {};
         let maxGradeDate = null;
 
+        // If no raw rows, detect unit from grades sample sum
+        let unitIsKg = rawIsKg;
+        if (!rawParsed.length && gradeRows.length) {
+          let gSum = 0, n = 0;
+          for (let i = 0; i < gradeRows.length && n < 50; i++) {
+            const keys = Object.keys(gradeRows[i]);
+            const qtyKey = keys.find(k => /كمية|qty|quantity/i.test(String(k))) || keys[2];
+            const q = parseQty(gradeRows[i][qtyKey]);
+            if (q) { gSum += q; n++; }
+          }
+          unitIsKg = gSum >= 500;
+        }
+        const gradeToTon = (v) => {
+          const n = parseQty(v);
+          if (!n) return 0;
+          return unitIsKg ? +(n / 1000).toFixed(4) : +n.toFixed(4);
+        };
         gradeRows.forEach(r => {
           const keys = Object.keys(r);
-          const dateKey = keys.find(k => /تاريخ|date/i.test(k)) || keys[0];
-          const codeKey = keys.find(k => /كود\s*المورد|كود|code/i.test(k)) || keys[1];
-          const qtyKey = keys.find(k => /كمية|qty|quantity/i.test(k)) || keys[2];
-          const gradeEnKey = keys.find(k => /^grades$/i.test(String(k).trim()) || /grade\s*name|english/i.test(k));
-          const gradeArKey = keys.find(k => /درجة|grade/i.test(k) && k !== gradeEnKey);
+          const dateKey = keys.find(k => /تاريخ|date/i.test(String(k))) || keys[0];
+          const codeKey = keys.find(k => /كود\s*المورد|كود المورد|كود|code/i.test(String(k))) || keys[1];
+          const qtyKey = keys.find(k => /كمية|qty|quantity/i.test(String(k))) || keys[2];
+          const gradeEnKey = keys.find(k => /^grades$/i.test(String(k).trim()) || /grade\s*name|english/i.test(String(k)));
+          const gradeArKey = keys.find(k => /درجة|grade/i.test(String(k)) && k !== gradeEnKey);
 
           const code = String(r[codeKey] || '').trim().toLowerCase();
-          const qty = kgToTon(r[qtyKey]);
+          const qty = gradeToTon(r[qtyKey]);
           if (!code || !qty) return;
 
           let gName = '';
@@ -1814,7 +1872,7 @@ const BAKED_DATA = {"lastUpdate": "Nov 24, 2026", "gradesLastUpdate": "Nov 24, 2
         if (status) {
           status.style.display = 'flex';
           status.className = 'status-bar ok';
-          status.innerHTML = '✅ تم رفع بيانات الموردين الخارجيين — إجمالي التوريد: <b>' + totalActual.toFixed(2) + '</b> طن • موردين: <b>' + activeSuppliers.join(', ') + '</b>';
+          status.innerHTML = '✅ تم رفع بيانات الموردين الخارجيين — إجمالي التوريد: <b>' + totalActual.toFixed(2) + '</b> طن' + (rawIsKg ? ' <span style="opacity:.75">(من كجم÷1000)</span>' : '') + ' • موردين: <b>' + activeSuppliers.join(', ') + '</b> • أيام: <b>' + sortedDates.length + '</b>';
         }
       }
 
