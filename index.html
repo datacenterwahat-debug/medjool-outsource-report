@@ -1205,7 +1205,7 @@ const BAKED_DATA = {"lastUpdate": "Nov 24, 2026", "gradesLastUpdate": "Nov 24, 2
             } catch (e) { console.error(e); }
             document.getElementById('saveBtn').classList.add('pulse');
             status.className = 'status-bar ok';
-            status.innerHTML = '✅ Data updated from Excel (date auto-set to latest in الفعلي). Click <b>🚀 Publish to site</b> to deploy to Vercel.';
+            status.innerHTML = '✅ Data updated from Excel (date auto-set to latest). Click <b>🚀 Publish to site</b> to deploy to Vercel.';
           } catch (err) {
             status.className = 'status-bar err'; status.innerHTML = '❌ ' + err.message;
           }
@@ -1214,9 +1214,15 @@ const BAKED_DATA = {"lastUpdate": "Nov 24, 2026", "gradesLastUpdate": "Nov 24, 2
       });
 
       function getSheet(wb, names) {
+        const sheetNames = (wb.SheetNames || []).map(s => ({ raw: s, norm: String(s).trim() }));
         for (const n of names) {
-          const f = wb.SheetNames.find(s => s.includes(n) || s.toLowerCase().includes(n.toLowerCase()));
-          if (f) return XLSX.utils.sheet_to_json(wb.Sheets[f], { defval: null });
+          const nn = String(n).toLowerCase().trim();
+          const f = sheetNames.find(s =>
+            s.norm === n || s.norm.toLowerCase() === nn ||
+            s.norm.includes(n) || s.norm.toLowerCase().includes(nn) ||
+            s.raw.includes(n)
+          );
+          if (f) return XLSX.utils.sheet_to_json(wb.Sheets[f.raw], { defval: null, raw: false });
         }
         return [];
       }
@@ -1356,6 +1362,26 @@ const BAKED_DATA = {"lastUpdate": "Nov 24, 2026", "gradesLastUpdate": "Nov 24, 2
       }
 
       function parseWorkbook(wb) {
+        // Detect outsource format (Raw os / Grades os)
+        const sheetNames = (wb.SheetNames || []).map(s => String(s));
+        const hasRawOs = sheetNames.some(s => /raw\s*os/i.test(s) || /خام/.test(s));
+        const hasGradesOs = sheetNames.some(s => (/grad|crades|درجات/i.test(s) && /os/i.test(s)) || /^grades\s*os/i.test(s.trim()));
+        const hasSupplierCodes = sheetNames.some(s => /اكواد\s*الموردين|اكواد/i.test(s));
+        // Heuristic: any sheet with header كود المورد
+        let hasOsColumns = false;
+        try {
+          for (const sn of wb.SheetNames) {
+            const rows = XLSX.utils.sheet_to_json(wb.Sheets[sn], { defval: null, range: 0 });
+            if (!rows || !rows.length) continue;
+            const keys = Object.keys(rows[0] || {}).join(' ');
+            if (/كود\s*المورد|كود المورد/i.test(keys)) { hasOsColumns = true; break; }
+          }
+        } catch (e) { }
+        if (hasRawOs || hasGradesOs || (hasSupplierCodes && hasOsColumns) || hasOsColumns) {
+          parseOutsourceWorkbook(wb);
+          return;
+        }
+
         const actualRows = getSheet(wb, ['الفعلي', 'Actual', 'actual']);
         let totalMedjool = 0, totalInedible = 0;
         const byDate = {}, bySupplier = {}, inedibleBySup = {}, otherItems = {}, byDateSector = {}, inedibleByDate = {}, inedibleByDateSector = {};
@@ -1402,35 +1428,22 @@ const BAKED_DATA = {"lastUpdate": "Nov 24, 2026", "gradesLastUpdate": "Nov 24, 2
               }
             }
           } else {
-            // Other items (Sewi, Saghi, ...)
             const name = item || 'Other';
             otherItems[name] = (otherItems[name] || 0) + qty;
           }
         });
 
-        // Targets (Medjool expected by sector)
         const targetRows = getSheet(wb, ['متوقع انتاجية', 'Target', 'expected', 'productivity']);
         const targets = {}; let totalTarget = 0;
         targetRows.forEach(r => {
           const keys = Object.keys(r);
-          const supKey = keys.find(k => /مورد|supplier|sector/i.test(k)) || keys[0];
-          const qtyKey = keys.find(k => /كمية|qty|quantity|متوقع/i.test(k)) || keys[1];
-          const sup = String(r[supKey] || '').toUpperCase().trim();
+          const secKey = keys.find(k => /قطاع|sector|مورد|code/i.test(k)) || keys[0];
+          const qtyKey = keys.find(k => /كمية|qty|target|متوقع/i.test(k)) || keys[1];
+          const sec = String(r[secKey] || '').toUpperCase().trim();
           const qty = parseFloat(r[qtyKey]) || 0;
-          if (sup && qty) { targets[sup] = qty; totalTarget += qty; }
+          if (sec && qty) { targets[sec] = (targets[sec] || 0) + qty; totalTarget += qty; }
         });
 
-        // Station
-        const disbRows = getSheet(wb, ['الصرف', 'Disbursement', 'Station', 'صرف']);
-        let station = 0;
-        disbRows.forEach(r => {
-          const keys = Object.keys(r);
-          const qtyKey = keys.find(k => /كمية|qty|quantity/i.test(k)) || keys[2];
-          station += parseFloat(r[qtyKey]) || 0;
-        });
-        if (!station) station = totalMedjool;
-
-        // Grades + grades max date
         const gradeRows = getSheet(wb, ['درجات', 'Grades', 'درجة']);
         const gradeMap = {}; let maxGradeDate = null;
         gradeRows.forEach(r => {
@@ -1449,7 +1462,6 @@ const BAKED_DATA = {"lastUpdate": "Nov 24, 2026", "gradesLastUpdate": "Nov 24, 2
         });
         const grades = Object.entries(gradeMap).map(([name, qty]) => ({ name, qty: +qty.toFixed(2) })).sort((a, b) => b.qty - a.qty);
 
-        // Final grades total sheet (kg → ton /1000) — Grades page only
         const finalRows = getSheet(wb, ['Final grades total', 'final grades total', 'Final Grades Total']);
         const FINAL_COL_MAP = {
           'اولي': 'Grade 1', 'أولى': 'Grade 1', 'اولى': 'Grade 1',
@@ -1477,7 +1489,7 @@ const BAKED_DATA = {"lastUpdate": "Nov 24, 2026", "gradesLastUpdate": "Nov 24, 2
             finalTotals[mapped] = +((finalTotals[mapped] || 0) + ton).toFixed(4);
           });
         });
-        const finalGradeOrder = ['Grade 1','Grade 2','Grade 3','Grade 4','Golden Crown','Dry','Rutab','Under Processing','Production Waste','Compost Waste','Hashaf']; // wastes last
+        const finalGradeOrder = ['Grade 1','Grade 2','Grade 3','Grade 4','Golden Crown','Dry','Rutab','Under Processing','Production Waste','Compost Waste','Hashaf'];
         const finalGrades = {
           bySector: finalBySector,
           totals: finalTotals,
@@ -1485,7 +1497,6 @@ const BAKED_DATA = {"lastUpdate": "Nov 24, 2026", "gradesLastUpdate": "Nov 24, 2
           sectors: Object.keys(finalBySector).sort()
         };
 
-        // Daily series (Medjool only)
         const sortedDates = Object.keys(byDate).sort();
         const dailyLabels = sortedDates.map(d => {
           const day = d.slice(8, 10).replace(/^0/, '');
@@ -1494,7 +1505,6 @@ const BAKED_DATA = {"lastUpdate": "Nov 24, 2026", "gradesLastUpdate": "Nov 24, 2
         });
         const dailyValues = sortedDates.map(d => +byDate[d].toFixed(2));
 
-        // Sectors
         const order = ["M27", "M21", "M30", "M33", "M06", "M32", "M28", "M01", "M25", "M29", "M03", "M26", "M31", "M24", "M22"];
         const allSectors = [...new Set([...Object.keys(bySupplier), ...Object.keys(targets)])].sort((a, b) => {
           const ia = order.indexOf(a), ib = order.indexOf(b);
@@ -1502,16 +1512,10 @@ const BAKED_DATA = {"lastUpdate": "Nov 24, 2026", "gradesLastUpdate": "Nov 24, 2
         });
         const sectorActual = allSectors.map(s => +(bySupplier[s] || 0).toFixed(2));
         const sectorTarget = allSectors.map(s => +(targets[s] || 0).toFixed(2));
-
-        // Inedible by sector
         const inedibleSectors = Object.keys(inedibleBySup).sort();
         const inedibleValues = inedibleSectors.map(s => +inedibleBySup[s].toFixed(2));
-
-        // Other items
         const otherLabels = Object.keys(otherItems);
         const otherValues = otherLabels.map(k => +otherItems[k].toFixed(2));
-
-        // Per-sector daily + inedible detail
         const sectorDetails = {};
         allSectors.forEach(s => {
           sectorDetails[s] = {
@@ -1521,11 +1525,7 @@ const BAKED_DATA = {"lastUpdate": "Nov 24, 2026", "gradesLastUpdate": "Nov 24, 2
             daily: { labels: [], values: [] }
           };
         });
-        // rebuild daily per sector from actual rows - need byDateSector
-        // byDateSector was not built; build quickly from stored maps if we add during loop
-        // For now: if we have byDateSector global from loop...
         if (typeof byDateSector !== 'undefined') {
-          // Only days with actual harvest for each sector
           allSectors.forEach(s => {
             const dates = Object.keys(byDateSector[s] || {}).sort().filter(d => (byDateSector[s][d] || 0) > 0);
             sectorDetails[s].daily = {
@@ -1539,6 +1539,7 @@ const BAKED_DATA = {"lastUpdate": "Nov 24, 2026", "gradesLastUpdate": "Nov 24, 2
           });
         }
 
+        const station = totalMedjool;
         DATA = {
           lastUpdate: formatDisplayDate(maxActualDate),
           gradesLastUpdate: formatDisplayDate(maxGradeDate || maxActualDate),
@@ -1579,6 +1580,242 @@ const BAKED_DATA = {"lastUpdate": "Nov 24, 2026", "gradesLastUpdate": "Nov 24, 2
         activeDate = null;
         buildSectorButtons();
         renderAll();
+      }
+
+      /** Parse outsource Excel: Raw os + Grades os (qty in kg → tons) */
+      function parseOutsourceWorkbook(wb) {
+        const kgToTon = (v) => {
+          const n = parseFloat(v);
+          if (!isFinite(n) || !n) return 0;
+          return +(n / 1000).toFixed(4);
+        };
+
+        // Supplier master (optional)
+        const suppliers = {};
+        const codeRows = getSheet(wb, ['اكواد الموردين', 'اكواد', 'suppliers', 'Codes']);
+        codeRows.forEach(r => {
+          const keys = Object.keys(r);
+          const codeKey = keys.find(k => /كود|code/i.test(k)) || keys[0];
+          const nameKey = keys.find(k => /اسم|name/i.test(k)) || keys[1];
+          const cityKey = keys.find(k => /مدينة|city/i.test(k)) || keys[2];
+          const code = String(r[codeKey] || '').trim().toLowerCase();
+          if (!code || !/^os\d+/i.test(code)) return;
+          suppliers[code] = {
+            name: String(r[nameKey] || '').trim(),
+            city: String(r[cityKey] || '').trim()
+          };
+        });
+
+        // Raw os
+        const rawRows = getSheet(wb, ['Raw os', 'raw os', 'RAW OS', 'خام']);
+        const byDate = {};
+        const bySupplier = {};
+        const byDateSector = {};
+        let maxActualDate = null;
+        let totalActual = 0;
+
+        rawRows.forEach(r => {
+          const keys = Object.keys(r);
+          const dateKey = keys.find(k => /تاريخ|date/i.test(k)) || keys[0];
+          const codeKey = keys.find(k => /كود\s*المورد|كود|code|supplier\s*code/i.test(k)) || keys[1];
+          const qtyKey = keys.find(k => /كمية|qty|quantity/i.test(k)) || keys[2];
+          const nameKey = keys.find(k => /اسم\s*المورد|اسم|name/i.test(k));
+          const cityKey = keys.find(k => /مدينة|city/i.test(k));
+
+          const code = String(r[codeKey] || '').trim().toLowerCase();
+          const qty = kgToTon(r[qtyKey]);
+          if (!code || !qty) return;
+          const dStr = toDateStr(r[dateKey]);
+          if (dStr && (!maxActualDate || dStr > maxActualDate)) maxActualDate = dStr;
+
+          totalActual += qty;
+          bySupplier[code] = (bySupplier[code] || 0) + qty;
+          if (dStr) {
+            byDate[dStr] = (byDate[dStr] || 0) + qty;
+            if (!byDateSector[code]) byDateSector[code] = {};
+            byDateSector[code][dStr] = (byDateSector[code][dStr] || 0) + qty;
+          }
+          if (!suppliers[code]) {
+            suppliers[code] = {
+              name: nameKey ? String(r[nameKey] || '').trim() : code,
+              city: cityKey ? String(r[cityKey] || '').trim() : ''
+            };
+          } else {
+            if (nameKey && r[nameKey]) suppliers[code].name = String(r[nameKey]).trim();
+            if (cityKey && r[cityKey]) suppliers[code].city = String(r[cityKey]).trim();
+          }
+        });
+
+        // Grades os
+        const gradeRows = getSheet(wb, ['Grades os', 'grades os', 'Crades os', 'crades', 'درجات']);
+        const gradeTotals = {};
+        const gradesBySupplier = {};
+        let maxGradeDate = null;
+
+        gradeRows.forEach(r => {
+          const keys = Object.keys(r);
+          const dateKey = keys.find(k => /تاريخ|date/i.test(k)) || keys[0];
+          const codeKey = keys.find(k => /كود\s*المورد|كود|code/i.test(k)) || keys[1];
+          const qtyKey = keys.find(k => /كمية|qty|quantity/i.test(k)) || keys[2];
+          const gradeEnKey = keys.find(k => /^grades$/i.test(String(k).trim()) || /grade\s*name|english/i.test(k));
+          const gradeArKey = keys.find(k => /درجة|grade/i.test(k) && k !== gradeEnKey);
+
+          const code = String(r[codeKey] || '').trim().toLowerCase();
+          const qty = kgToTon(r[qtyKey]);
+          if (!code || !qty) return;
+
+          let gName = '';
+          if (gradeEnKey && r[gradeEnKey] != null && String(r[gradeEnKey]).trim()) {
+            gName = String(r[gradeEnKey]).trim();
+          } else if (gradeArKey && r[gradeArKey] != null) {
+            gName = cleanGradeName(String(r[gradeArKey]).trim());
+          } else {
+            gName = 'Unknown';
+          }
+          // normalize common variants
+          gName = gName.replace(/\s+/g, ' ').trim();
+          if (/^مطوق/.test(gName) || /golden/i.test(gName)) gName = 'Golden Crown';
+          else if (/^مرطب|^رطب/.test(gName) || /rutab/i.test(gName)) gName = 'Rutab';
+          else if (/^جاف/.test(gName) || /^dry$/i.test(gName)) gName = 'Dry';
+          else if (/تحت\s*التصنيع|under\s*processing/i.test(gName)) gName = 'Under Processing';
+          else if (/بقايا|اتربه|dust/i.test(gName)) gName = 'Grade 4 (Dust Remains)';
+          else if (/^هالك$|^waste$/i.test(gName)) gName = 'Waste';
+          else if (/^1$|^grade\s*1$/i.test(gName)) gName = 'Grade 1';
+          else if (/^2$|^grade\s*2$/i.test(gName)) gName = 'Grade 2';
+          else if (/^3$|^grade\s*3$/i.test(gName)) gName = 'Grade 3';
+          else if (/^4$|^grade\s*4$/i.test(gName)) gName = 'Grade 4';
+
+          const dStr = toDateStr(r[dateKey]);
+          if (dStr && (!maxGradeDate || dStr > maxGradeDate)) maxGradeDate = dStr;
+
+          gradeTotals[gName] = (gradeTotals[gName] || 0) + qty;
+          if (!gradesBySupplier[code]) gradesBySupplier[code] = {};
+          gradesBySupplier[code][gName] = (gradesBySupplier[code][gName] || 0) + qty;
+
+          if (!bySupplier[code]) bySupplier[code] = bySupplier[code] || 0;
+          if (!suppliers[code]) suppliers[code] = { name: code, city: '' };
+        });
+
+        // Round aggregates
+        Object.keys(bySupplier).forEach(c => { bySupplier[c] = +bySupplier[c].toFixed(4); });
+        Object.keys(byDate).forEach(d => { byDate[d] = +byDate[d].toFixed(4); });
+        Object.keys(gradeTotals).forEach(g => { gradeTotals[g] = +gradeTotals[g].toFixed(4); });
+        Object.keys(gradesBySupplier).forEach(c => {
+          Object.keys(gradesBySupplier[c]).forEach(g => {
+            gradesBySupplier[c][g] = +gradesBySupplier[c][g].toFixed(4);
+          });
+        });
+        totalActual = +totalActual.toFixed(4);
+
+        const preferred = [
+          'Grade 1', 'Grade 2', 'Grade 3', 'Grade 4',
+          'Grade 4 (Dust Remains)', 'Golden Crown', 'Dry', 'Rutab',
+          'Under Processing', 'Waste', 'Production Waste', 'Compost Waste', 'Hashaf'
+        ];
+        const gradeOrder = [];
+        preferred.forEach(n => { if (gradeTotals[n] > 0) gradeOrder.push(n); });
+        Object.keys(gradeTotals).forEach(n => {
+          if (gradeTotals[n] > 0 && !gradeOrder.includes(n)) gradeOrder.push(n);
+        });
+
+        const grades = gradeOrder.map(n => ({ name: n, qty: gradeTotals[n] }));
+        const sortedQty = +grades.reduce((s, g) => s + g.qty, 0).toFixed(4);
+
+        const activeSuppliers = [...new Set([
+          ...Object.keys(bySupplier).filter(c => (bySupplier[c] || 0) > 0),
+          ...Object.keys(gradesBySupplier)
+        ])].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+
+        const finalBySector = {};
+        activeSuppliers.forEach(code => {
+          finalBySector[code] = {};
+          gradeOrder.forEach(g => {
+            finalBySector[code][g] = (gradesBySupplier[code] && gradesBySupplier[code][g]) || 0;
+          });
+        });
+        const finalTotals = {};
+        gradeOrder.forEach(g => { finalTotals[g] = gradeTotals[g]; });
+
+        const sortedDates = Object.keys(byDate).sort();
+        const dailyLabels = sortedDates.map(d => {
+          const day = String(+d.slice(8, 10));
+          const mon = String(+d.slice(5, 7));
+          return day + '/' + mon;
+        });
+        const dailyValues = sortedDates.map(d => byDate[d]);
+
+        const sectorActual = activeSuppliers.map(s => bySupplier[s] || 0);
+        const sectorTarget = activeSuppliers.map(() => 0);
+
+        const sectorDetails = {};
+        activeSuppliers.forEach(s => {
+          const dates = Object.keys(byDateSector[s] || {}).sort().filter(d => (byDateSector[s][d] || 0) > 0);
+          sectorDetails[s] = {
+            actual: bySupplier[s] || 0,
+            target: 0,
+            inedible: 0,
+            daily: {
+              labels: dates.map(d => String(+d.slice(8, 10)) + '/' + String(+d.slice(5, 7))),
+              values: dates.map(d => +(byDateSector[s][d] || 0).toFixed(4))
+            }
+          };
+        });
+
+        const dateIndex = {};
+        sortedDates.forEach(ds => {
+          dateIndex[ds] = {
+            medjool: byDate[ds] || 0,
+            inedible: 0,
+            bySector: {},
+            inedibleBySector: {}
+          };
+        });
+        Object.keys(byDateSector).forEach(sup => {
+          Object.keys(byDateSector[sup] || {}).forEach(ds => {
+            if (!dateIndex[ds]) dateIndex[ds] = { medjool: 0, inedible: 0, bySector: {}, inedibleBySector: {} };
+            dateIndex[ds].bySector[sup] = +(byDateSector[sup][ds] || 0).toFixed(4);
+          });
+        });
+
+        const lastDate = maxActualDate || maxGradeDate;
+        DATA = {
+          lastUpdate: formatDisplayDate(lastDate),
+          gradesLastUpdate: formatDisplayDate(maxGradeDate || lastDate),
+          totalActual: totalActual,
+          totalTarget: 730,
+          station: totalActual,
+          inedible: 0,
+          rawStock: Math.max(0, +(totalActual - sortedQty).toFixed(4)),
+          daily: { labels: dailyLabels, values: dailyValues },
+          sectors: { labels: activeSuppliers, actual: sectorActual, target: sectorTarget },
+          inedibleBySector: { labels: [], values: [] },
+          otherItems: { labels: [], values: [] },
+          sectorDetails,
+          grades,
+          finalGrades: {
+            bySector: finalBySector,
+            totals: finalTotals,
+            order: gradeOrder,
+            sectors: activeSuppliers
+          },
+          dateIndex,
+          suppliers
+        };
+        FULL_DATA = JSON.parse(JSON.stringify(DATA));
+        activeSector = 'ALL';
+        activeDate = null;
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA)); } catch (e) { }
+        buildSectorButtons();
+        buildGradesSectorButtons();
+        renderAll();
+        renderGradesPage();
+
+        const status = document.getElementById('statusBar');
+        if (status) {
+          status.style.display = 'flex';
+          status.className = 'status-bar ok';
+          status.innerHTML = '✅ تم رفع بيانات الموردين الخارجيين — إجمالي التوريد: <b>' + totalActual.toFixed(2) + '</b> طن • موردين: <b>' + activeSuppliers.join(', ') + '</b>';
+        }
       }
 
 
