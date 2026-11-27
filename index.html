@@ -3037,8 +3037,15 @@ function setDateFilter(isoOrNull) {
       function setSuppliersFilter(code) {
         if (code !== 'ALL' && activeSuppliersFilter === code) code = 'ALL';
         activeSuppliersFilter = code;
-        selectedCity = null;
         selectedSupplierCode = (code !== 'ALL') ? code : null;
+        // Keep city filter if the chosen supplier belongs to that city; else clear city
+        if (code !== 'ALL' && selectedCity) {
+          const meta = getSupplierMeta(code);
+          if ((meta.city || '—') !== selectedCity) selectedCity = null;
+        }
+        if (code === 'ALL' && !selectedCity) {
+          selectedSupplierCode = null;
+        }
         buildSuppliersFilterButtons();
         renderSuppliersPage();
       }
@@ -3047,9 +3054,25 @@ function setDateFilter(isoOrNull) {
         const wrap = document.getElementById('suppliersSectorFilters');
         if (!wrap) return;
         const base = FULL_DATA || DATA;
-        const labels = (base.sectors && base.sectors.labels) ? base.sectors.labels.slice() : [];
+        let labels = (base.sectors && base.sectors.labels) ? base.sectors.labels.slice() : [];
+        // If a city is selected, only show supplier codes from that city
+        if (selectedCity) {
+          labels = labels.filter(c => {
+            const info = (base.suppliers && base.suppliers[c]) || {};
+            return (info.city || '—') === selectedCity;
+          });
+        }
         wrap.innerHTML = '<span class="sf-label">Supplier filter:</span>' +
           '<button type="button" class="sector-btn' + (activeSuppliersFilter === 'ALL' ? ' active' : '') + '" data-sector="ALL" onclick="setSuppliersFilter(\'ALL\')">All</button>';
+        if (selectedCity) {
+          const chip = document.createElement('button');
+          chip.type = 'button';
+          chip.className = 'sector-btn active';
+          chip.textContent = '🏙️ ' + selectedCity + ' ✕';
+          chip.title = 'Clear city filter';
+          chip.onclick = () => { selectedCity = null; selectedSupplierCode = null; activeSuppliersFilter = 'ALL'; renderSuppliersPage(); };
+          wrap.appendChild(chip);
+        }
         labels.forEach(s => {
           const btn = document.createElement('button');
           btn.type = 'button';
@@ -3213,9 +3236,16 @@ function setDateFilter(isoOrNull) {
               onClick: (evt, els) => {
                 if (!els || !els.length) return;
                 const i = els[0].index;
-                selectedCity = cityLabels[i];
-                selectedSupplierCode = null;
-                showSupplierDetail({ mode: 'city', city: selectedCity });
+                const city = cityLabels[i];
+                // toggle city selection
+                if (selectedCity === city) {
+                  selectedCity = null;
+                  selectedSupplierCode = null;
+                } else {
+                  selectedCity = city;
+                  selectedSupplierCode = null;
+                }
+                renderSuppliersPage();
               },
               plugins: {
                 legend: { display: false },
@@ -3244,14 +3274,32 @@ function setDateFilter(isoOrNull) {
           });
         }
 
-        // Supplier ranking chart
+        // Supplier ranking chart — only suppliers of selected city (if any)
         let codes = (base.sectors && base.sectors.labels) ? base.sectors.labels.slice() : [];
-        if (activeSuppliersFilter && activeSuppliersFilter !== 'ALL') codes = codes.filter(c => c === activeSuppliersFilter);
+        if (activeSuppliersFilter && activeSuppliersFilter !== 'ALL') {
+          codes = codes.filter(c => c === activeSuppliersFilter);
+        }
+        if (selectedCity) {
+          codes = codes.filter(c => {
+            const meta = getSupplierMeta(c);
+            return (meta.city || '—') === selectedCity;
+          });
+        }
         const rankData = codes.map(c => ({
           code: c,
           name: getSupplierMeta(c).name,
-          qty: getSupplierQty(c)
+          qty: getSupplierQty(c),
+          city: getSupplierMeta(c).city
         })).sort((a, b) => b.qty - a.qty);
+
+        // Update ranking chart title to reflect city filter
+        const rankTitle = document.querySelector('#suppliers .chart-card:nth-child(2) .chart-title') ||
+          document.querySelector('#supplierRankChart') && document.getElementById('supplierRankChart').closest('.chart-card') && document.getElementById('supplierRankChart').closest('.chart-card').querySelector('.chart-title');
+        if (rankTitle) {
+          rankTitle.textContent = selectedCity
+            ? ('📦 Suppliers in ' + selectedCity + ' (' + rankData.length + ')')
+            : '📦 Suppliers Ranking';
+        }
 
         if (supplierRankChart) { try { supplierRankChart.destroy(); } catch (e) {} }
         const rankCanvas = document.getElementById('supplierRankChart');
