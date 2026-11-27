@@ -145,7 +145,7 @@
 
     .date-badge {
       background: var(--card);
-      padding: 10px 18px 8px;
+      padding: 10px 16px 9px;
       border-radius: 14px;
       box-shadow: var(--shadow-sm);
       border: 1px solid var(--border);
@@ -155,12 +155,60 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      gap: 4px;
-      min-width: 175px;
+      gap: 3px;
+      min-width: 168px;
+      position: relative;
+    }
+
+    .date-badge-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .date-badge-value {
+      font-size: 1.12rem;
+      font-weight: 800;
+      color: var(--red);
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .date-badge-cal {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      border: 1px solid rgba(220, 38, 38, .25);
+      background: rgba(254, 226, 226, .55);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      padding: 0;
+    }
+    .date-badge-cal:hover {
+      background: rgba(254, 202, 202, .85);
+    }
+    .date-badge-cal svg {
+      width: 16px;
+      height: 16px;
+      display: block;
+    }
+
+    .date-badge input[type="date"] {
+      position: absolute;
+      opacity: 0;
+      width: 1px;
+      height: 1px;
+      pointer-events: none;
     }
 
     .date-badge-label {
-      font-size: .74rem;
+      font-size: .78rem;
       font-weight: 800;
       letter-spacing: .08em;
       color: var(--text-muted);
@@ -168,7 +216,7 @@
       text-align: center;
       width: 100%;
       margin: 0;
-      order: 2;
+      line-height: 1.2;
     }
 
     .date-badge .red {
@@ -814,44 +862,6 @@
       width: 100%;
     }
 
-    .date-badge input[type="date"] {
-      border: none;
-      background: transparent;
-      font-family: inherit;
-      font-weight: 800;
-      font-size: 1.08rem;
-      color: var(--red);
-      cursor: pointer;
-      outline: none;
-      width: auto;
-      text-align: center;
-      margin: 0 auto;
-      padding: 0;
-      order: 1;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .date-badge input[type="date"]::-webkit-calendar-picker-indicator {
-      cursor: pointer;
-      opacity: 1;
-      width: 20px;
-      height: 20px;
-      margin-left: 6px;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23dc2626' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E");
-      background-size: 20px 20px;
-      background-repeat: no-repeat;
-      background-position: center;
-      filter: none;
-    }
-    .date-badge input[type="date"]::-webkit-datetime-edit {
-      text-align: center;
-      padding: 0;
-    }
-    .date-badge input[type="date"]::-webkit-datetime-edit-fields-wrapper {
-      justify-content: center;
-    }
-
     .btn-present {
       background: var(--card);
       color: var(--text);
@@ -1109,12 +1119,19 @@
         <div class="tabs">
           <button class="tab active" data-page="main">📊 Main Dashboard</button>
           <button class="tab" data-page="grades">🏷️ Grades</button>
+          <button class="tab" data-page="suppliers">🏭 Suppliers</button>
         </div>
       </div>
       <div class="header-actions">
         <div class="date-badge">
-          <input type="date" id="lastUpdateInput" value="2026-10-24">
+          <div class="date-badge-row">
+            <span class="date-badge-value" id="dateDisplayText">—</span>
+            <button type="button" class="date-badge-cal" id="datePickerBtn" title="Pick date" aria-label="Pick report date">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </button>
+          </div>
           <div class="date-badge-label">REPORT DATE</div>
+          <input type="date" id="lastUpdateInput" value="2026-10-24">
         </div>
         <input type="file" id="fileInput" class="file-input" accept=".xlsx,.xls">
         <button class="btn btn-theme" id="themeBtn">🌙</button>
@@ -1263,6 +1280,38 @@
       <div class="footer">Linah Farms • Medjool External Suppliers Report 2026</div>
     </div>
 
+    <!-- SUPPLIERS PAGE -->
+    <div id="suppliers" class="page">
+      <div class="card-header" style="margin-bottom:10px">
+        <div class="icon icon-purple">🏭</div>
+        <span>Suppliers &amp; Cities Overview</span>
+      </div>
+
+      <div class="sector-filters" id="suppliersSectorFilters" style="margin-bottom:12px">
+        <span class="sf-label">Supplier filter:</span>
+        <button type="button" class="sector-btn active" data-sector="ALL" onclick="setSuppliersFilter('ALL')">All</button>
+        <div class="supplier-info" id="suppliersSupplierInfo"></div>
+      </div>
+
+      <div class="charts-row" style="margin-bottom:14px">
+        <div class="chart-card">
+          <div class="chart-title">🏙️ Supply by City (click a city)</div>
+          <div class="chart-container" style="height:300px"><canvas id="cityChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">📦 Suppliers Ranking</div>
+          <div class="chart-container" style="height:300px"><canvas id="supplierRankChart"></canvas></div>
+        </div>
+      </div>
+
+      <div class="chart-card" id="supplierDetailPanel" style="margin-bottom:14px">
+        <div class="chart-title">🔎 Selection Details <span id="supplierDetailHint" style="font-weight:600;font-size:.8rem;color:var(--text-muted);margin-left:8px">Click a city or supplier bar</span></div>
+        <div id="supplierDetailBody" style="padding:6px 2px 4px;color:var(--text-muted);font-weight:600">No selection yet.</div>
+      </div>
+
+      <div class="footer">Linah Farms • Medjool External Suppliers Report 2026</div>
+    </div>
+
     <div class="admin-only" style="margin-top:18px;">
       <div class="admin-bar" style="margin-top:0;flex-direction:column;align-items:stretch;gap:12px;">
         <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;">
@@ -1339,6 +1388,8 @@ const BAKED_DATA = {"lastUpdate": "Nov 24, 2026", "gradesLastUpdate": "Nov 24, 2
           document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
           tab.classList.add('active');
           document.getElementById(tab.dataset.page).classList.add('active');
+          if (tab.dataset.page === 'suppliers' && typeof renderSuppliersPage === 'function') renderSuppliersPage();
+          if (tab.dataset.page === 'grades' && typeof renderGradesPage === 'function') renderGradesPage();
         });
       });
 
@@ -1486,6 +1537,7 @@ const BAKED_DATA = {"lastUpdate": "Nov 24, 2026", "gradesLastUpdate": "Nov 24, 2
           .replace(/مطوق|Wrapped|جولدن\s*كراون|Golden\s*Crown/gi, 'Golden Crown')
           .replace(/جاف|Dry/gi, 'Dry')
           .replace(/رطب|Rutab/gi, 'Rutab')
+          .replace(/under\s*size|تحت\s*الحجم|صغ[يى]ر\s*الحجم/gi, 'Under Size')
           .replace(/هالك\s*تصنيع|Production\s*Waste/gi, 'Production Waste')
           .replace(/حشف|Hashaf/gi, 'Hashaf')
           .replace(/هالك\s*كمبوست|Compost\s*Waste/gi, 'Compost Waste')
@@ -1499,6 +1551,7 @@ const BAKED_DATA = {"lastUpdate": "Nov 24, 2026", "gradesLastUpdate": "Nov 24, 2
         const n = (name || '').toLowerCase().trim();
         if (/golden\s*crown|جولدن|مطوق|matouq|wrapped/.test(n)) return 'Golden Crown';
         if (/^رطب$|rutab/.test(n)) return 'Rutab';
+        if (/under\s*size|تحت\s*الحجم|صغ[يى]ر/.test(n)) return 'Under Size';
         if (/^جاف$|dry/.test(n)) return 'Dry';
         if (/production\s*waste|هالك\s*تصنيع/.test(n)) return 'Production Waste';
         if (/hashaf|حشف/.test(n)) return 'Hashaf';
@@ -1514,6 +1567,7 @@ const BAKED_DATA = {"lastUpdate": "Nov 24, 2026", "gradesLastUpdate": "Nov 24, 2
         if (/grade\s*1|^1$/.test(n)) return '🥇';
         if (/grade\s*2|^2$/.test(n)) return '🥈';
         if (/grade\s*3|^3$/.test(n)) return '🥉';
+        if (/under\s*size|تحت\s*الحجم/.test(n)) return '📏';
         if (/dust|بقايا|اتربه/.test(n)) return '🧹';
         if (/grade\s*4|^4$/.test(n)) return '4️⃣';
         if (/golden\s*crown|جولدن|wrapped|مطوق|matouq/.test(n)) return '👑';
@@ -1664,7 +1718,7 @@ const BAKED_DATA = {"lastUpdate": "Nov 24, 2026", "gradesLastUpdate": "Nov 24, 2
           'اولي': 'Grade 1', 'أولى': 'Grade 1', 'اولى': 'Grade 1',
           'ثانية': 'Grade 2', 'ثالثه': 'Grade 3', 'ثالثة': 'Grade 3',
           'رابعة': 'Grade 4', 'جولدن كراون': 'Golden Crown', 'جولدن': 'Golden Crown',
-          'رطب': 'Rutab', 'جاف': 'Dry', 'تحت التصنيع': 'Under Processing',
+          'رطب': 'Rutab', 'جاف': 'Dry', 'تحت التصنيع': 'Under Processing', 'تحت الحجم': 'Under Size', 'Under Size': 'Under Size',
           'هالك كمبوست': 'Compost Waste', 'هالك تصنيع': 'Production Waste', 'حشف': 'Hashaf'
         };
         const finalBySector = {};
@@ -1904,6 +1958,7 @@ const BAKED_DATA = {"lastUpdate": "Nov 24, 2026", "gradesLastUpdate": "Nov 24, 2
           if (/^مطوق/.test(gName) || /golden/i.test(gName)) gName = 'Golden Crown';
           else if (/^مرطب|^رطب/.test(gName) || /rutab/i.test(gName)) gName = 'Rutab';
           else if (/^جاف/.test(gName) || /^dry$/i.test(gName)) gName = 'Dry';
+          else if (/under\s*size|تحت\s*الحجم|صغ[يى]ر\s*الحجم/i.test(gName)) gName = 'Under Size';
           else if (/تحت\s*التصنيع|under\s*processing/i.test(gName)) gName = 'Under Processing';
           else if (/بقايا|اتربه|dust/i.test(gName)) gName = 'Grade 4 (Dust Remains)';
           else if (/^هالك$|^waste$/i.test(gName)) gName = 'Waste';
@@ -1936,7 +1991,7 @@ const BAKED_DATA = {"lastUpdate": "Nov 24, 2026", "gradesLastUpdate": "Nov 24, 2
 
         const preferred = [
           'Grade 1', 'Grade 2', 'Grade 3', 'Grade 4',
-          'Grade 4 (Dust Remains)', 'Golden Crown', 'Dry', 'Rutab',
+          'Grade 4 (Dust Remains)', 'Golden Crown', 'Dry', 'Rutab', 'Under Size',
           'Under Processing', 'Waste', 'Production Waste', 'Compost Waste', 'Hashaf'
         ];
         const gradeOrder = [];
@@ -2036,6 +2091,8 @@ const BAKED_DATA = {"lastUpdate": "Nov 24, 2026", "gradesLastUpdate": "Nov 24, 2
         buildGradesSectorButtons();
         renderAll();
         renderGradesPage();
+        if (typeof renderSuppliersPage === 'function') renderSuppliersPage();
+        if (typeof syncDateInputs === 'function') syncDateInputs();
 
         const status = document.getElementById('statusBar');
         if (status) {
@@ -2141,7 +2198,7 @@ const BAKED_DATA = {"lastUpdate": "Nov 24, 2026", "gradesLastUpdate": "Nov 24, 2
         // Core grades first; waste types always last (Compost / Production / Hashaf)
         const preferred = [
           'Grade 1', 'Grade 2', 'Grade 3', 'Grade 4',
-          'Grade 4 (Dust Remains)', 'Golden Crown', 'Dry', 'Rutab',
+          'Grade 4 (Dust Remains)', 'Golden Crown', 'Dry', 'Rutab', 'Under Size',
           'Under Processing', 'Waste', 'Production Waste', 'Compost Waste', 'Hashaf'
         ];
         let qtyMap = {};
@@ -2493,6 +2550,7 @@ function setDateFilter(isoOrNull) {
             if (/golden\s*crown|wrapped|مطوق|matouq|جولدن/.test(n)) return 5;
             if (/dry|جاف/.test(n)) return 6;
             if (/rutab|رطب/.test(n)) return 7;
+            if (/under\s*size|تحت\s*الحجم/.test(n)) return 7.5;
             if (/production\s*waste|هالك\s*تصنيع/.test(n)) return 8;
             if (/hashaf|حشف/.test(n)) return 8.5;
             if (/waste|هالك|halik|inedible|compost/.test(n)) return 8.2;
@@ -2710,6 +2768,13 @@ function setDateFilter(isoOrNull) {
         }
       }
 
+      function formatDateBadge(iso) {
+        if (!iso || iso.length < 8) return '—';
+        const p = iso.slice(0, 10).split('-');
+        if (p.length < 3) return iso;
+        return p[1] + '/' + p[2] + '/' + p[0];
+      }
+
       function syncDateInputs() {
         const di = document.getElementById('lastUpdateInput');
         if (!di) return;
@@ -2717,6 +2782,30 @@ function setDateFilter(isoOrNull) {
         if (iso) {
           di.value = iso;
           window._manualDateIso = iso;
+        }
+        const disp = document.getElementById('dateDisplayText');
+        if (disp) disp.textContent = formatDateBadge(di.value || iso || '');
+      }
+
+      function wireDateBadge() {
+        const di = document.getElementById('lastUpdateInput');
+        const btn = document.getElementById('datePickerBtn');
+        if (btn && di) {
+          btn.addEventListener('click', () => {
+            try {
+              if (typeof di.showPicker === 'function') di.showPicker();
+              else { di.style.pointerEvents = 'auto'; di.focus(); di.click(); }
+            } catch (e) { di.click(); }
+          });
+        }
+        if (di) {
+          di.addEventListener('change', () => {
+            const iso = di.value;
+            window._manualDateIso = iso;
+            const disp = document.getElementById('dateDisplayText');
+            if (disp) disp.textContent = formatDateBadge(iso);
+            if (typeof onManualDateChange === 'function') onManualDateChange(iso);
+          });
         }
       }
 
@@ -2938,6 +3027,321 @@ function setDateFilter(isoOrNull) {
         }
       }
 
+
+      let cityChart = null;
+      let supplierRankChart = null;
+      let activeSuppliersFilter = 'ALL';
+      let selectedCity = null;
+      let selectedSupplierCode = null;
+
+      function setSuppliersFilter(code) {
+        if (code !== 'ALL' && activeSuppliersFilter === code) code = 'ALL';
+        activeSuppliersFilter = code;
+        selectedCity = null;
+        selectedSupplierCode = (code !== 'ALL') ? code : null;
+        buildSuppliersFilterButtons();
+        renderSuppliersPage();
+      }
+
+      function buildSuppliersFilterButtons() {
+        const wrap = document.getElementById('suppliersSectorFilters');
+        if (!wrap) return;
+        const base = FULL_DATA || DATA;
+        const labels = (base.sectors && base.sectors.labels) ? base.sectors.labels.slice() : [];
+        wrap.innerHTML = '<span class="sf-label">Supplier filter:</span>' +
+          '<button type="button" class="sector-btn' + (activeSuppliersFilter === 'ALL' ? ' active' : '') + '" data-sector="ALL" onclick="setSuppliersFilter(\'ALL\')">All</button>';
+        labels.forEach(s => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'sector-btn' + (activeSuppliersFilter === s ? ' active' : '');
+          btn.dataset.sector = s;
+          btn.textContent = s;
+          btn.onclick = () => setSuppliersFilter(s);
+          wrap.appendChild(btn);
+        });
+        let info = document.getElementById('suppliersSupplierInfo');
+        if (!info) {
+          info = document.createElement('div');
+          info.id = 'suppliersSupplierInfo';
+          info.className = 'supplier-info';
+        }
+        wrap.appendChild(info);
+        updateSupplierInfoBar('suppliersSupplierInfo', activeSuppliersFilter);
+      }
+
+      function getSupplierMeta(code) {
+        const base = FULL_DATA || DATA;
+        const info = (base.suppliers && base.suppliers[code]) || {};
+        return {
+          code,
+          name: info.name || code,
+          city: info.city || '—'
+        };
+      }
+
+      function getSupplierQty(code) {
+        const base = FULL_DATA || DATA;
+        const labs = (base.sectors && base.sectors.labels) || [];
+        const acts = (base.sectors && base.sectors.actual) || [];
+        const ix = labs.indexOf(code);
+        return ix >= 0 ? (Number(acts[ix]) || 0) : 0;
+      }
+
+      function getSupplierGrades(code) {
+        const base = FULL_DATA || DATA;
+        const fg = base.finalGrades || {};
+        const map = (fg.bySector && fg.bySector[code]) ? fg.bySector[code] : {};
+        return Object.entries(map)
+          .map(([name, qty]) => ({ name, qty: Number(qty) || 0 }))
+          .filter(g => g.qty > 0)
+          .sort((a, b) => b.qty - a.qty);
+      }
+
+      function buildCityAgg(filterCode) {
+        const base = FULL_DATA || DATA;
+        const labs = (base.sectors && base.sectors.labels) || [];
+        const cityMap = {};
+        labs.forEach(code => {
+          if (filterCode && filterCode !== 'ALL' && code !== filterCode) return;
+          const meta = getSupplierMeta(code);
+          const city = meta.city || '—';
+          const qty = getSupplierQty(code);
+          if (!cityMap[city]) cityMap[city] = { qty: 0, suppliers: [] };
+          cityMap[city].qty += qty;
+          cityMap[city].suppliers.push({ code, name: meta.name, qty });
+        });
+        Object.keys(cityMap).forEach(c => {
+          cityMap[c].qty = +cityMap[c].qty.toFixed(4);
+          cityMap[c].suppliers.sort((a, b) => b.qty - a.qty);
+        });
+        return cityMap;
+      }
+
+      function showSupplierDetail({ mode, city, code }) {
+        const body = document.getElementById('supplierDetailBody');
+        const hint = document.getElementById('supplierDetailHint');
+        if (!body) return;
+
+        if (mode === 'city' && city) {
+          const cityMap = buildCityAgg(activeSuppliersFilter);
+          const row = cityMap[city];
+          if (!row) {
+            body.innerHTML = '<span style="color:var(--text-muted)">No data for this city.</span>';
+            return;
+          }
+          if (hint) hint.textContent = 'City: ' + city;
+          let html = '<div style="display:flex;flex-wrap:wrap;gap:10px 18px;margin-bottom:12px;align-items:center">' +
+            '<div style="font-weight:800;font-size:1.05rem">🏙️ ' + city + '</div>' +
+            '<div style="font-weight:800;color:var(--primary);font-size:1.15rem">' + row.qty.toFixed(2) + ' <span style="font-size:.8rem">Ton</span></div>' +
+            '<div style="color:var(--text-muted);font-size:.82rem">' + row.suppliers.length + ' supplier(s)</div></div>';
+          html += '<div style="display:grid;gap:10px">';
+          row.suppliers.forEach(s => {
+            const grades = getSupplierGrades(s.code);
+            const gradesHtml = grades.length
+              ? grades.map(g => '<span class="badge badge-green" style="margin:2px 4px 2px 0;display:inline-block">' + g.name + ': ' + g.qty.toFixed(2) + 't</span>').join('')
+              : '<span style="color:var(--text-muted);font-size:.8rem">No grades</span>';
+            html += '<div style="background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:10px 12px">' +
+              '<div style="display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin-bottom:6px">' +
+              '<span class="si-code" style="background:var(--primary);color:#fff;padding:2px 8px;border-radius:6px;font-size:.78rem;font-weight:800">' + s.code + '</span>' +
+              '<span style="font-weight:800">👤 ' + s.name + '</span>' +
+              '<span style="font-weight:800;color:var(--primary)">' + s.qty.toFixed(2) + ' Ton</span></div>' +
+              '<div style="font-size:.8rem;font-weight:700;color:var(--text-muted);margin-bottom:4px">Grades</div>' +
+              '<div>' + gradesHtml + '</div></div>';
+          });
+          html += '</div>';
+          body.innerHTML = html;
+          return;
+        }
+
+        if (mode === 'supplier' && code) {
+          const meta = getSupplierMeta(code);
+          const qty = getSupplierQty(code);
+          const grades = getSupplierGrades(code);
+          if (hint) hint.textContent = 'Supplier: ' + code;
+          const gradesHtml = grades.length
+            ? '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-top:8px">' +
+              grades.map(g => '<div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;text-align:center">' +
+                '<div style="font-weight:700;font-size:.78rem;margin-bottom:2px">' + g.name + '</div>' +
+                '<div style="font-weight:800;font-size:1.05rem;color:var(--primary)">' + g.qty.toFixed(2) + '</div>' +
+                '<div style="font-size:.68rem;color:var(--text-muted)">Ton</div></div>').join('') + '</div>'
+            : '<div style="color:var(--text-muted);margin-top:6px">No grades data</div>';
+          body.innerHTML =
+            '<div style="display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin-bottom:8px">' +
+            '<span class="si-code" style="background:var(--primary);color:#fff;padding:2px 8px;border-radius:6px;font-size:.78rem;font-weight:800">' + code + '</span>' +
+            '<span style="font-weight:800;font-size:1.05rem">👤 ' + meta.name + '</span>' +
+            '<span style="font-weight:700;color:var(--text-muted)">📍 ' + meta.city + '</span>' +
+            '<span style="font-weight:800;color:var(--primary);font-size:1.15rem">' + qty.toFixed(2) + ' Ton</span></div>' +
+            '<div style="font-weight:800;margin-top:6px">Sorting grades</div>' + gradesHtml;
+          return;
+        }
+
+        if (hint) hint.textContent = 'Click a city or supplier bar';
+        body.innerHTML = '<span style="color:var(--text-muted)">No selection yet.</span>';
+      }
+
+      function renderSuppliersPage() {
+        buildSuppliersFilterButtons();
+        try { Chart.register(ChartDataLabels); } catch (e) {}
+        const base = FULL_DATA || DATA;
+        const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+        const textCol = dark ? '#f0fdf4' : '#111';
+        const muted = dark ? '#a7f3d0' : '#475569';
+        const grid = dark ? 'rgba(167,243,208,.12)' : 'rgba(6,95,70,.08)';
+
+        // City chart
+        const cityMap = buildCityAgg(activeSuppliersFilter);
+        const cityEntries = Object.entries(cityMap).sort((a, b) => b[1].qty - a[1].qty);
+        const cityLabels = cityEntries.map(e => e[0]);
+        const cityValues = cityEntries.map(e => e[1].qty);
+        const cityColors = cityLabels.map((_, i) => {
+          const palette = ['#059669', '#0d9488', '#0284c7', '#7c3aed', '#ea580c', '#ca8a04', '#e11d48', '#4f46e5'];
+          return palette[i % palette.length];
+        });
+
+        if (cityChart) { try { cityChart.destroy(); } catch (e) {} }
+        const cityCanvas = document.getElementById('cityChart');
+        if (cityCanvas) {
+          cityChart = new Chart(cityCanvas, {
+            type: 'bar',
+            data: {
+              labels: cityLabels,
+              datasets: [{ label: 'Ton', data: cityValues, backgroundColor: cityColors, borderRadius: 6, barPercentage: .7 }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              onClick: (evt, els) => {
+                if (!els || !els.length) return;
+                const i = els[0].index;
+                selectedCity = cityLabels[i];
+                selectedSupplierCode = null;
+                showSupplierDetail({ mode: 'city', city: selectedCity });
+              },
+              plugins: {
+                legend: { display: false },
+                datalabels: {
+                  anchor: 'end', align: 'top', color: textCol, font: { weight: '800', size: 11 },
+                  formatter: v => (v > 0 ? (v < 10 ? v.toFixed(2) : v.toFixed(1)) : '')
+                },
+                tooltip: {
+                  callbacks: {
+                    afterBody: (items) => {
+                      const it = items[0];
+                      if (!it) return [];
+                      const city = cityLabels[it.dataIndex];
+                      const row = cityMap[city];
+                      if (!row) return [];
+                      return row.suppliers.slice(0, 6).map(s => s.code + ' — ' + s.qty.toFixed(2) + 't');
+                    }
+                  }
+                }
+              },
+              scales: {
+                x: { ticks: { color: textCol, font: { weight: '700', size: 11 } }, grid: { display: false } },
+                y: { beginAtZero: true, grace: '18%', ticks: { color: muted }, grid: { color: grid } }
+              }
+            }
+          });
+        }
+
+        // Supplier ranking chart
+        let codes = (base.sectors && base.sectors.labels) ? base.sectors.labels.slice() : [];
+        if (activeSuppliersFilter && activeSuppliersFilter !== 'ALL') codes = codes.filter(c => c === activeSuppliersFilter);
+        const rankData = codes.map(c => ({
+          code: c,
+          name: getSupplierMeta(c).name,
+          qty: getSupplierQty(c)
+        })).sort((a, b) => b.qty - a.qty);
+
+        if (supplierRankChart) { try { supplierRankChart.destroy(); } catch (e) {} }
+        const rankCanvas = document.getElementById('supplierRankChart');
+        if (rankCanvas) {
+          supplierRankChart = new Chart(rankCanvas, {
+            type: 'bar',
+            data: {
+              labels: rankData.map(r => r.code),
+              datasets: [{
+                label: 'Ton',
+                data: rankData.map(r => r.qty),
+                backgroundColor: '#047857',
+                borderRadius: 6,
+                barPercentage: .65
+              }]
+            },
+            options: {
+              indexAxis: 'y',
+              responsive: true,
+              maintainAspectRatio: false,
+              onClick: (evt, els) => {
+                if (!els || !els.length) return;
+                const i = els[0].index;
+                selectedSupplierCode = rankData[i].code;
+                selectedCity = null;
+                showSupplierDetail({ mode: 'supplier', code: selectedSupplierCode });
+              },
+              plugins: {
+                legend: { display: false },
+                datalabels: {
+                  anchor: 'end', align: 'right', color: textCol, font: { weight: '800', size: 11 },
+                  formatter: v => (v > 0 ? (v < 10 ? v.toFixed(2) : v.toFixed(1)) : '')
+                },
+                tooltip: {
+                  callbacks: {
+                    title: (items) => {
+                      const i = items[0] && items[0].dataIndex;
+                      const r = rankData[i];
+                      return r ? (r.code + ' — ' + r.name) : '';
+                    }
+                  }
+                }
+              },
+              scales: {
+                x: { beginAtZero: true, grace: '12%', ticks: { color: muted }, grid: { color: grid } },
+                y: { ticks: { color: textCol, font: { weight: '700', size: 11 } }, grid: { display: false } }
+              }
+            }
+          });
+        }
+
+        // Detail panel state
+        if (selectedSupplierCode) showSupplierDetail({ mode: 'supplier', code: selectedSupplierCode });
+        else if (selectedCity) showSupplierDetail({ mode: 'city', city: selectedCity });
+        else if (activeSuppliersFilter && activeSuppliersFilter !== 'ALL') {
+          selectedSupplierCode = activeSuppliersFilter;
+          showSupplierDetail({ mode: 'supplier', code: selectedSupplierCode });
+        } else {
+          showSupplierDetail({});
+        }
+      }
+
+
+
+      function ensureLastUpdateFromData() {
+        const base = FULL_DATA || DATA;
+        if (!base) return;
+        let iso = parseDisplayToIso(base.lastUpdate) || '';
+        const keys = Object.keys(base.dateIndex || {}).sort();
+        if (keys.length) {
+          const maxIso = keys[keys.length - 1];
+          if (!iso || maxIso > iso) iso = maxIso;
+        }
+        if (iso) {
+          const disp = formatDisplayDate(iso);
+          base.lastUpdate = disp;
+          if (DATA) DATA.lastUpdate = disp;
+          if (FULL_DATA) FULL_DATA.lastUpdate = disp;
+          if (!base.gradesLastUpdate) {
+            base.gradesLastUpdate = disp;
+            if (DATA) DATA.gradesLastUpdate = disp;
+            if (FULL_DATA) FULL_DATA.gradesLastUpdate = disp;
+          }
+          const di = document.getElementById('lastUpdateInput');
+          if (di) di.value = iso;
+          window._manualDateIso = iso;
+        }
+        if (typeof syncDateInputs === 'function') syncDateInputs();
+      }
+
       function startApp() {
         FULL_DATA = FULL_DATA || JSON.parse(JSON.stringify(DATA));
         if (!FULL_DATA.finalGrades && DATA.finalGrades) FULL_DATA.finalGrades = DATA.finalGrades;
@@ -2947,11 +3351,14 @@ function setDateFilter(isoOrNull) {
         }
         applyModeUI();
         loadGithubConfig();
+        ensureLastUpdateFromData();
         buildSectorButtons();
         buildGradesSectorButtons();
         renderAll();
         renderGradesPage();
         syncDateInputs();
+        wireDateBadge();
+        if (typeof renderSuppliersPage === 'function') renderSuppliersPage();
       }
 
       async function bootstrap() {
